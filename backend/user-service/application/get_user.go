@@ -1,10 +1,10 @@
 package application
 
 import (
-	"monolith/adapter/dto"
-	errApp "monolith/application/error"
-	"monolith/domain/usecase"
-	"monolith/domain/vo"
+	"user-service/adapter/dto"
+	errApp "user-service/application/error"
+	"user-service/domain/usecase"
+	"user-service/domain/vo"
 )
 
 type GetUserApplication interface {

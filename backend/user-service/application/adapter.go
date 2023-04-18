@@ -1,9 +1,9 @@
 package application
 
 import (
-	"monolith/adapter/dto"
-	"monolith/domain/entity"
-	"monolith/domain/vo"
+	"user-service/adapter/dto"
+	"user-service/domain/entity"
+	"user-service/domain/vo"
 )
 
 func AdaptUserDtoToUserDomain(user dto.User) (entity.User, error) {

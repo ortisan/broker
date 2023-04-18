@@ -1,9 +1,9 @@
 package router
 
 import (
-	"monolith/application"
-	errApp "monolith/application/error"
 	"net/http"
+	"user-service/application"
+	errApp "user-service/application/error"
 
 	"github.com/gin-gonic/gin"
 )

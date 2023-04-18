@@ -1,9 +1,9 @@
 package database
 
 import (
-	"monolith/application/repository"
-	"monolith/domain/entity"
-	"monolith/domain/vo"
+	"user-service/application/repository"
+	"user-service/domain/entity"
+	"user-service/domain/vo"
 )
 
 type getUserPostgresRepository struct {

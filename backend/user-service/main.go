@@ -1,7 +1,7 @@
 package main
 
 import (
-	"monolith/infrastructure/di"
+	"user-service/infrastructure/di"
 )
 
 func main() {

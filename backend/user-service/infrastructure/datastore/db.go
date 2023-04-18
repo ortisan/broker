@@ -3,7 +3,7 @@ package infrastructure
 import (
 	"fmt"
 	"log"
-	"monolith/config"
+	"user-service/config"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

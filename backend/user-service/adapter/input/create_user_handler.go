@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"monolith/adapter/dto"
-	"monolith/application"
-	errorApp "monolith/application/error"
 	"net/http"
+	"user-service/adapter/dto"
+	"user-service/application"
+	errorApp "user-service/application/error"
 
 	"github.com/gin-gonic/gin"
 )

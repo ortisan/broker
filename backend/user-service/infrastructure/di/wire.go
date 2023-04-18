@@ -4,10 +4,10 @@
 package di
 
 import (
-	"monolith/adapter/output/database"
-	"monolith/application"
-	"monolith/domain/usecase"
-	"monolith/infrastructure/http/router"
+	"user-service/adapter/output/database"
+	"user-service/application"
+	"user-service/domain/usecase"
+	"user-service/infrastructure/http/router"
 
 	"github.com/gin-gonic/gin"
 

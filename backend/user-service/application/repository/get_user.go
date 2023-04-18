@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"monolith/domain/entity"
-	"monolith/domain/vo"
+	"user-service/domain/entity"
+	"user-service/domain/vo"
 )
 
 type GetUser interface {
