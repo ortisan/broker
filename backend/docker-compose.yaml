@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  postgres-user-service:
+    image: 'postgres:15.1-alpine'
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+    ports:
+      - 5432:5432   
+  
+  fluent-bit:
+    image: fluent/fluent-bit
+    ports:
+      - 24224:24224/tcp
+      - 24224:24224/udp
+    volumes:
+      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      
+  grafana:
+    image: grafana/grafana:latest
+    user: 1000:1000
+    ports:
+      - 3000:3000
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.6
+    ports:
+        - 5775:5775/udp
+        - 6831:6831/udp
+        - 6832:6832/udp
+        - 5778:5778
+        - 16686:16686
+        - 14268:14268
+        - 9411:9411
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
