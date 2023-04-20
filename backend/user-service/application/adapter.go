@@ -22,7 +22,7 @@ func AdaptUserDtoToUserDomain(user dto.User) (entity.User, error) {
 	if errName != nil {
 		return nil, errName
 	}
-	emailVo, errEmail := vo.NewEmailFromValue(email)
+	emailVo, errEmail := vo.NewEmail(email)
 	if errEmail != nil {
 		return nil, errEmail
 	}

@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	r, err := di.InitializeRouters()
+	r, err := di.ConfigRouters()
 	if err != nil {
 		panic(err)
 	}

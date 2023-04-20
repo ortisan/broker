@@ -1,8 +1,8 @@
 package entity
 
 import (
-	errApp "monolith/application/error"
-	"monolith/domain/vo"
+	errApp "user-service/application/error"
+	"user-service/domain/vo"
 )
 
 type User interface {
@@ -48,6 +48,9 @@ func NewUser(id vo.Id,
 	password vo.Password,
 	federationId vo.Id,
 	profilePhotoUrl vo.Url) (User, error) {
+	if id == nil {
+		return nil, errApp.NewBadArgumentError("id is required")
+	}
 	if name == nil {
 		return nil, errApp.NewBadArgumentError("name is required")
 	}

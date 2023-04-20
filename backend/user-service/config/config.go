@@ -2,7 +2,7 @@ package config
 
 import "github.com/spf13/viper"
 
-type config struct {
+type Config struct {
 	Database struct {
 		User         string
 		Password     string
@@ -10,25 +10,32 @@ type config struct {
 		Port         string
 		DatabaseName string
 	}
+
+	OpenTelemetry struct {
+		AgentHost string `mapstructure:"agent_host"`
+		AgentPort string `mapstructure:"agent_port"`
+	}
+
 	Server struct {
 		Address string
+		Name    string
 	}
 }
 
-var C config
-
-func ReadConfig() {
-	Config := &C
+func NewConfig() (*Config, error) {
+	var cfg Config
 
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
 
 	if err := viper.ReadInConfig(); err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	if err := viper.Unmarshal(&Config); err != nil {
-		panic(err)
+	if err := viper.Unmarshal(&cfg); err != nil {
+		return nil, err
 	}
+
+	return &cfg, nil
 }

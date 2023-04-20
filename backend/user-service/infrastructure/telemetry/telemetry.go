@@ -1,8 +1,10 @@
 package telemetry
 
 import (
+	"errors"
+	"user-service/config"
+
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/jaeger"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
@@ -10,32 +12,25 @@ import (
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 )
 
-const (
-	environment = "production"
-	id          = 1
-)
-
-func New() (*sdktrace.TracerProvider, error) {
+func NewTelemetry(cfg *config.Config) (*sdktrace.TracerProvider, error) {
+	if cfg == nil {
+		return nil, errors.New("config is required")
+	}
 	exp, err := jaeger.New(
-		jaeger.WithAgentEndpoint(jaeger.WithAgentHost(config.ConfigObj.OpenTelemetry.AgentHost), jaeger.WithAgentPort(config.ConfigObj.OpenTelemetry.AgentPort)),
+		jaeger.WithAgentEndpoint(jaeger.WithAgentHost(cfg.OpenTelemetry.AgentHost),
+			jaeger.WithAgentPort(cfg.OpenTelemetry.AgentPort)),
 	)
 	if err != nil {
 		return nil, err
 	}
 	tp := sdktrace.NewTracerProvider(
-		// Always be sure to batch in production.
 		sdktrace.WithBatcher(exp),
-		// Record information about this application in a Resource.
 		sdktrace.WithResource(resource.NewWithAttributes(
 			semconv.SchemaURL,
-			semconv.ServiceNameKey.String(config.ConfigObj.App.Name),
-			attribute.String("environment", environment),
-			attribute.Int64("ID", id),
+			semconv.ServiceNameKey.String(cfg.Server.Name),
 		)),
 	)
-
 	otel.SetTracerProvider(tp)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
-
 	return tp, nil
 }

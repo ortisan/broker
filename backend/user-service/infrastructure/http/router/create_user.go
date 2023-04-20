@@ -13,7 +13,7 @@ type createUserRouter struct {
 	createUserApplication application.CreateUserApplication
 }
 
-func newCreateUserRouter(router *gin.Engine, createUserApplication application.CreateUserApplication) (*gin.Engine, error) {
+func NewCreateUserRouter(router *gin.Engine, createUserApplication application.CreateUserApplication) (*gin.Engine, error) {
 	if createUserApplication == nil {
 		return nil, errApp.NewBadArgumentError("create user application is required")
 	}

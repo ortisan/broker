@@ -11,14 +11,27 @@ import (
 	"github.com/google/wire"
 	"user-service/adapter/output/database"
 	"user-service/application"
+	"user-service/config"
 	"user-service/domain/usecase"
+	"user-service/infrastructure/datastore"
 	"user-service/infrastructure/http/router"
 )
 
 // Injectors from wire.go:
 
-func InitializeRouters() (*gin.Engine, error) {
-	createUser := database.NewCreateUserPostgresRepository()
+func ConfigRouters() (*gin.Engine, error) {
+	configConfig, err := config.NewConfig()
+	if err != nil {
+		return nil, err
+	}
+	db, err := datastore.NewDB(configConfig)
+	if err != nil {
+		return nil, err
+	}
+	createUser, err := database.NewCreateUserPostgresRepository(db)
+	if err != nil {
+		return nil, err
+	}
 	usecaseCreateUser, err := usecase.NewCreateUserUseCase(createUser)
 	if err != nil {
 		return nil, err
@@ -27,7 +40,10 @@ func InitializeRouters() (*gin.Engine, error) {
 	if err != nil {
 		return nil, err
 	}
-	getUser := database.NewGetUserPostgresRepository()
+	getUser, err := database.NewGetUserPostgresRepository(db)
+	if err != nil {
+		return nil, err
+	}
 	usecaseGetUser, err := usecase.NewGetUserUseCase(getUser)
 	if err != nil {
 		return nil, err
@@ -45,6 +61,10 @@ func InitializeRouters() (*gin.Engine, error) {
 
 // wire.go:
 
+var ConfigSet = wire.NewSet(config.NewConfig)
+
+var DbSet = wire.NewSet(datastore.NewDB)
+
 var RepositoriesSet = wire.NewSet(database.NewCreateUserPostgresRepository, database.NewGetUserPostgresRepository)
 
 var UseCasesSet = wire.NewSet(usecase.NewCreateUserUseCase, usecase.NewGetUserUseCase)
@@ -53,4 +73,4 @@ var ApplicationsSet = wire.NewSet(application.NewCreateUserApplication, applicat
 
 var RoutersSet = wire.NewSet(router.NewRouter)
 
-var AppSet = wire.NewSet(RepositoriesSet, UseCasesSet, ApplicationsSet, RoutersSet)
+var AppSet = wire.NewSet(ConfigSet, DbSet, RepositoriesSet, UseCasesSet, ApplicationsSet, RoutersSet)

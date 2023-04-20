@@ -1,10 +1,10 @@
 package usecase
 
 import (
-	errApp "monolith/application/error"
-	"monolith/application/repository"
-	"monolith/domain/entity"
-	"monolith/domain/vo"
+	errApp "user-service/application/error"
+	"user-service/application/repository"
+	"user-service/domain/entity"
+	"user-service/domain/vo"
 
 	log "github.com/sirupsen/logrus"
 )

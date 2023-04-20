@@ -1,8 +1,8 @@
 package vo
 
 import (
-	errApp "monolith/application/error"
 	nurl "net/url"
+	errApp "user-service/application/error"
 )
 
 type url struct {

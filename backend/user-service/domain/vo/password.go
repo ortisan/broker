@@ -1,7 +1,7 @@
 package vo
 
 import (
-	errApp "monolith/application/error"
+	errApp "user-service/application/error"
 
 	"golang.org/x/crypto/bcrypt"
 )

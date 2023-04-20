@@ -1,6 +1,6 @@
 package repository
 
-import "monolith/domain/entity"
+import "user-service/domain/entity"
 
 type CreateUser interface {
 	Create(user entity.User) (entity.User, error)

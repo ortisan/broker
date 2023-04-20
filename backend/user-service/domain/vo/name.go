@@ -1,6 +1,6 @@
 package vo
 
-import errApp "monolith/application/error"
+import errApp "user-service/application/error"
 
 type name struct {
 	value string

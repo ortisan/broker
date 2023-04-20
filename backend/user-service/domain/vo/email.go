@@ -1,8 +1,8 @@
 package vo
 
 import (
-	errApp "monolith/application/error"
 	"net/mail"
+	errApp "user-service/application/error"
 )
 
 type email struct {
@@ -22,7 +22,7 @@ func validate(email string) bool {
 	return err == nil
 }
 
-func NewEmailFromValue(value string) (Email, error) {
+func NewEmail(value string) (Email, error) {
 	if !validate(value) {
 		return nil, errApp.NewBadArgumentError("id value is invalid")
 	}

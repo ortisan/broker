@@ -16,7 +16,7 @@ type getUserByIdRouter struct {
 	getUserApplication application.GetUserApplication
 }
 
-func newGetUserByIdRouter(router *gin.Engine, getUserApplication application.GetUserApplication) (*gin.Engine, error) {
+func NewGetUserByIdRouter(router *gin.Engine, getUserApplication application.GetUserApplication) (*gin.Engine, error) {
 	if getUserApplication == nil {
 		return nil, errApp.NewBadArgumentError("get user application is required")
 	}

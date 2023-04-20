@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Recovery() gin.HandlerFunc {
+func recovery() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
@@ -36,12 +36,12 @@ func Recovery() gin.HandlerFunc {
 func NewRouter(createUserApplication application.CreateUserApplication, getUserApplication application.GetUserApplication) (*gin.Engine, error) {
 	r := gin.Default()
 	r.Use(gin.Logger())
-	r.Use(Recovery())
-	_, errorCreate := newCreateUserRouter(r, createUserApplication)
+	r.Use(recovery())
+	_, errorCreate := NewCreateUserRouter(r, createUserApplication)
 	if errorCreate != nil {
 		return nil, errorCreate
 	}
-	_, errorGetUser := newGetUserByIdRouter(r, getUserApplication)
+	_, errorGetUser := NewGetUserByIdRouter(r, getUserApplication)
 	if errorGetUser != nil {
 		return nil, errorGetUser
 	}

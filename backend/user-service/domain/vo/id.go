@@ -1,7 +1,7 @@
 package vo
 
 import (
-	errApp "monolith/application/error"
+	errApp "user-service/application/error"
 
 	uuid "github.com/satori/go.uuid"
 )
