@@ -8,27 +8,27 @@ import (
 )
 
 type GetUserApplication interface {
-	GetUser(userId string) (dto.User, error)
+	GetUser(userId string) (*dto.User, error)
 }
 
 type getUserApplication struct {
 	getUserUseCase usecase.GetUser
 }
 
-func (gua *getUserApplication) GetUser(userId string) (dto.User, error) {
+func (gua *getUserApplication) GetUser(userId string) (*dto.User, error) {
 	id, errId := vo.NewIdFromValue(userId)
 	if errId != nil {
-		return dto.User{}, errId
+		return nil, errId
 	}
 	user, errUseCase := gua.getUserUseCase.GetUserById(id)
 	if errUseCase != nil {
-		return dto.User{}, errUseCase
+		return nil, errUseCase
 	}
 	userDto, errAdaptDto := AdaptUserDomainToUserDto(user)
 	if errAdaptDto != nil {
-		return dto.User{}, errAdaptDto
+		return nil, errAdaptDto
 	}
-	return userDto, nil
+	return &userDto, nil
 }
 
 func NewGetUserApplication(getUserUseCase usecase.GetUser) (GetUserApplication, error) {

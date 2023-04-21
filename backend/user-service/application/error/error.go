@@ -36,6 +36,10 @@ type NotFoundError struct {
 	*baseError
 }
 
+func NewNotFoundError(msg string) error {
+	return &NotFoundError{&baseError{msg: msg}}
+}
+
 type AuthError struct {
 	*baseError
 }

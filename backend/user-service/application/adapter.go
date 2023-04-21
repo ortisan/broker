@@ -48,14 +48,14 @@ func AdaptUserDtoToUserDomain(user dto.User) (entity.User, error) {
 
 func AdaptUserDomainToUserDto(user entity.User) (dto.User, error) {
 	var profileUrlStr string
-	if user.ProfilePhotoUrl() != nil {
-		profileUrlStr = user.ProfilePhotoUrl().Value()
+	if user.ProfileAvatarUrl() != nil {
+		profileUrlStr = user.ProfileAvatarUrl().Value()
 	}
-
-	return dto.NewUser(
-		user.Id().Value(),
-		user.FederationId().Value(),
-		user.Name().Value(),
-		user.Email().Value(),
-		profileUrlStr), nil
+	return dto.User{
+		ID:              user.Id().Value(),
+		FederationId:    user.FederationId().Value(),
+		Name:            user.Name().Value(),
+		Email:           user.Email().Value(),
+		ProfilePhotoUrl: profileUrlStr,
+	}, nil
 }

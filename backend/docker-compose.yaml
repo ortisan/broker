@@ -1,14 +1,20 @@
 version: '3'
 
 services:
-  postgres-database:
+  postgres-user-service:
     image: 'postgres:15.1-alpine'
     restart: always
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123456
     ports:
-      - 5432:5432    
+      - 5432:5432   
+  
+#  flyway:
+#    image: flyway/flyway:9-alpine
+#    command: -url=jdbc:postgresql://postgres-user-service:5432/flyway_teste -schemas=applicatin -user=postgres -password=postgres -connectRetries=10 migrate
+#    volumes:
+#      - ./scripts/migration:/flyway/sql/ 
 
   fluent-bit:
     image: fluent/fluent-bit
@@ -33,3 +39,16 @@ services:
       - 3000:3000
     volumes:
       - "./docker/volumes/grafana:/var/lib/grafana:rw"
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.6
+    ports:
+        - 5775:5775/udp
+        - 6831:6831/udp
+        - 6832:6832/udp
+        - 5778:5778
+        - 16686:16686
+        - 14268:14268
+        - 9411:9411
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
