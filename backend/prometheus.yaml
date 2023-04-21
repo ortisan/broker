@@ -10,4 +10,4 @@ scrape_configs:
     scrape_interval: 5s
     metrics_path: "/metrics"
     static_configs:
-      - targets: ["user-service:8080"] # User-service
+      - targets: ["ortisan-broker/go-user-service:8080"] # User-service

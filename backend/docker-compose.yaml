@@ -10,12 +10,6 @@ services:
     ports:
       - 5432:5432   
   
-#  flyway:
-#    image: flyway/flyway:9-alpine
-#    command: -url=jdbc:postgresql://postgres-user-service:5432/flyway_teste -schemas=applicatin -user=postgres -password=postgres -connectRetries=10 migrate
-#    volumes:
-#      - ./scripts/migration:/flyway/sql/ 
-
   fluent-bit:
     image: fluent/fluent-bit
     ports:
@@ -23,22 +17,19 @@ services:
       - 24224:24224/udp
     volumes:
       - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
-      - ./docker/volume:/tmp
 
   prometheus:
     image: prom/prometheus:latest
     ports:
       - 9090:9090
     volumes:
-      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
       
   grafana:
     image: grafana/grafana:latest
     user: 1000:1000
     ports:
       - 3000:3000
-    volumes:
-      - "./docker/volumes/grafana:/var/lib/grafana:rw"
 
   jaeger:
     image: jaegertracing/all-in-one:1.6
