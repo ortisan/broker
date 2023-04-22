@@ -14,7 +14,7 @@ type Url interface {
 }
 
 func (u *url) Value() string {
-	return u.value.RawPath
+	return u.value.String()
 }
 
 func NewUrlFromValue(value string) (Url, error) {

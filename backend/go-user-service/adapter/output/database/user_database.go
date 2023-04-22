@@ -23,7 +23,7 @@ type CreateUserPostgresRepository struct {
 
 func (cug *CreateUserPostgresRepository) Create(user entity.User) (entity.User, error) {
 	cug.logger.Infof("Creating user %v", user)
-	userModel, err := AdaptUserToModel(user)
+	userModel, err := AdaptUserEntityToUserModel(user)
 	if err != nil {
 		return nil, err
 	}
@@ -54,12 +54,16 @@ type getUserPostgresRepository struct {
 
 func (gup *getUserPostgresRepository) GetById(id vo.Id) (entity.User, error) {
 	gup.logger.Infof("Getting user by id: %v", id.Value())
-	var user entity.User
-	gup.db.First(user, id.Value())
-	if user == nil {
+	var user User
+	gup.db.Debug().Where("id = ?", id.Value()).Find(&user)
+	if user.ID == "" {
 		return nil, errApp.NewNotFoundError(fmt.Sprintf("User not found for id %s", id.Value()))
 	}
-	return user, nil
+	userEntity, err := AdaptUserModelToUserDomain(&user)
+	if err != nil {
+		return nil, errApp.NewBaseErrorWithCause("error to parse assemble user model", err)
+	}
+	return userEntity, nil
 }
 
 func NewGetUserPostgresRepository(db *gorm.DB, logger log.Logger) (repository.GetUser, error) {

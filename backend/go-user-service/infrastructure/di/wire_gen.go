@@ -11,7 +11,7 @@ import (
 	"github.com/google/wire"
 	"ortisan-broker/go-commons/infrastructure/log"
 	"ortisan-broker/go-user-service/adapter/input/http/controller"
-	"ortisan-broker/go-user-service/adapter/output/database"
+	database2 "ortisan-broker/go-user-service/adapter/output/database"
 	"ortisan-broker/go-user-service/application"
 	"ortisan-broker/go-user-service/config"
 	"ortisan-broker/go-user-service/domain/usecase"
@@ -25,7 +25,7 @@ func ConfigRouters() (*gin.Engine, error) {
 	if err != nil {
 		return nil, err
 	}
-	db, err := datastore.NewDB(configConfig)
+	db, err := database.NewDB(configConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +33,7 @@ func ConfigRouters() (*gin.Engine, error) {
 	if err != nil {
 		return nil, err
 	}
-	createUser, err := database.NewCreateUserPostgresRepository(db, logger)
+	createUser, err := database2.NewCreateUserPostgresRepository(db, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func ConfigRouters() (*gin.Engine, error) {
 	if err != nil {
 		return nil, err
 	}
-	getUser, err := database.NewGetUserPostgresRepository(db, logger)
+	getUser, err := database2.NewGetUserPostgresRepository(db, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -70,9 +70,9 @@ var ConfigSet = wire.NewSet(config.NewConfig)
 
 var LoggerSet = wire.NewSet(log.NewLogger)
 
-var DbSet = wire.NewSet(datastore.NewDB)
+var DbSet = wire.NewSet(database.NewDB)
 
-var RepositoriesSet = wire.NewSet(database.NewCreateUserPostgresRepository, database.NewGetUserPostgresRepository)
+var RepositoriesSet = wire.NewSet(database2.NewCreateUserPostgresRepository, database2.NewGetUserPostgresRepository)
 
 var UseCasesSet = wire.NewSet(usecase.NewCreateUserUseCase, usecase.NewGetUserUseCase)
 

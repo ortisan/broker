@@ -32,6 +32,14 @@ func (e *baseError) StackTrace() string {
 	return e.stackTrace
 }
 
+func NewBaseError(msg string) BaseError {
+	return &baseError{msg: msg}
+}
+
+func NewBaseErrorWithCause(msg string, cause error) error {
+	return &baseError{msg: msg, cause: cause, stackTrace: string(debug.Stack())}
+}
+
 type NotFoundError struct {
 	*baseError
 }

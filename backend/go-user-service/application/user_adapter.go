@@ -59,7 +59,7 @@ func AdaptUserDomainToUserDto(user entity.User) (dto.User, error) {
 		ID:               user.Id().Value(),
 		Name:             user.Name().Value(),
 		Email:            user.Email().Value(),
-		Username:         user.Name().Value(),
+		Username:         user.Username().Value(),
 		Password:         user.Password().Value(),
 		FederationId:     user.FederationId().Value(),
 		ProfileAvatarUrl: profileUrlStr,

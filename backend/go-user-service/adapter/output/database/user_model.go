@@ -1,6 +1,9 @@
 package database
 
-import "database/sql"
+import (
+	"database/sql"
+	"time"
+)
 
 type User struct {
 	ID               string `gorm:"primaryKey"`
@@ -10,6 +13,8 @@ type User struct {
 	Password         string
 	FederationId     string
 	ProfileAvatarUrl sql.NullString
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
 }
 
 func (User) TableName() string {

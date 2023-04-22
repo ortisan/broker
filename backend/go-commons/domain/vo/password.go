@@ -27,3 +27,9 @@ func NewPasswordFromValue(value string) (Name, error) {
 		value: string(bytes),
 	}, nil
 }
+
+func NewPasswordFromValueCrypted(value string) (Name, error) {
+	return &password{
+		value: value,
+	}, nil
+}

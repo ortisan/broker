@@ -73,7 +73,7 @@ func NewLogger() (Logger, error) {
 	var log = logrus.New()
 	log.SetFormatter(&logrus.JSONFormatter{})
 	log.SetOutput(os.Stdout)
-	level, err := logrus.ParseLevel("info")
+	level, err := logrus.ParseLevel("debug")
 	if err != nil {
 		return nil, errors.New("log level is invalid")
 	}

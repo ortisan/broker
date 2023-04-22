@@ -50,17 +50,17 @@ type getUserApplication struct {
 }
 
 func (gua *getUserApplication) GetUser(userId string) (*dto.User, error) {
-	id, errId := vo.NewIdFromValue(userId)
-	if errId != nil {
-		return nil, errId
+	id, err := vo.NewIdFromValue(userId)
+	if err != nil {
+		return nil, err
 	}
-	user, errUseCase := gua.getUserUseCase.GetUserById(id)
-	if errUseCase != nil {
-		return nil, errUseCase
+	user, err := gua.getUserUseCase.GetUserById(id)
+	if err != nil {
+		return nil, err
 	}
-	userDto, errAdaptDto := AdaptUserDomainToUserDto(user)
-	if errAdaptDto != nil {
-		return nil, errAdaptDto
+	userDto, err := AdaptUserDomainToUserDto(user)
+	if err != nil {
+		return nil, err
 	}
 	return &userDto, nil
 }
