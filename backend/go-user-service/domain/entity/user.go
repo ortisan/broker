@@ -10,7 +10,7 @@ type User interface {
 	Name() vo.Name
 	Email() vo.Email
 	Username() vo.Name
-	Password() vo.Password
+	Password() vo.Secret
 	FederationId() vo.Id
 	ProfileAvatarUrl() vo.Url
 }
@@ -20,7 +20,7 @@ type user struct {
 	name             vo.Name
 	email            vo.Email
 	username         vo.Name
-	password         vo.Password
+	password         vo.Secret
 	federationId     vo.Id
 	profileAvatarUrl vo.Url
 }
@@ -37,7 +37,7 @@ func (u *user) Email() vo.Email {
 func (u *user) Username() vo.Name {
 	return u.name
 }
-func (u *user) Password() vo.Password {
+func (u *user) Password() vo.Secret {
 	return u.password
 }
 func (u *user) FederationId() vo.Id {
@@ -51,7 +51,7 @@ func NewUser(id vo.Id,
 	name vo.Name,
 	email vo.Email,
 	username vo.Name,
-	password vo.Password,
+	password vo.Secret,
 	federationId vo.Id,
 	profileAvatarUrl vo.Url) (User, error) {
 	if id == nil {
