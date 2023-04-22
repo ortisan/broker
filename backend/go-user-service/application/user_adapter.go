@@ -1,9 +1,9 @@
-package user
+package application
 
 import (
+	"ortisan-broker/go-commons/domain/vo"
 	"ortisan-broker/go-user-service/adapter/dto"
 	"ortisan-broker/go-user-service/domain/entity"
-	"ortisan-broker/go-user-service/domain/vo"
 )
 
 func AdaptUserDtoToUserDomain(user dto.User) (entity.User, error) {

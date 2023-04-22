@@ -1,8 +1,8 @@
 package repository
 
 import (
+	"ortisan-broker/go-commons/domain/vo"
 	"ortisan-broker/go-user-service/domain/entity"
-	"ortisan-broker/go-user-service/domain/vo"
 )
 
 type GetUser interface {

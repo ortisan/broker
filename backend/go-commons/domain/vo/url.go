@@ -2,6 +2,7 @@ package vo
 
 import (
 	nurl "net/url"
+	errApp "ortisan-broker/go-commons/error"
 )
 
 type url struct {

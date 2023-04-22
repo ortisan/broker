@@ -27,7 +27,7 @@ func NewConfig() (*Config, error) {
 
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath("$BROKER_PROJECT_HOME/user-service")
+	viper.AddConfigPath("$BROKER_PROJECT_HOME/go-user-service")
 
 	if err := viper.ReadInConfig(); err != nil {
 		return nil, err

@@ -1,9 +1,10 @@
 package usecase
 
 import (
+	"ortisan-broker/go-commons/domain/vo"
+	errApp "ortisan-broker/go-commons/error"
 	"ortisan-broker/go-user-service/domain/entity"
 	"ortisan-broker/go-user-service/domain/repository"
-	"ortisan-broker/go-user-service/domain/vo"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -26,7 +27,7 @@ func NewGetUserUseCase(getUserRepository repository.GetUser) (GetUser, error) {
 	}).Info("Getting user...")
 
 	if getUserRepository == nil {
-		return nil, entity.NewBadArgumentError("getUserRepository is required")
+		return nil, errApp.NewBadArgumentError("getUserRepository is required")
 	}
 	return &getUser{
 		getUserRepository: getUserRepository,

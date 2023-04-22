@@ -1,7 +1,7 @@
 package entity
 
 import (
-	"ortisan-broker/go-user-service/domain/vo"
+	"ortisan-broker/go-commons/domain/vo"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

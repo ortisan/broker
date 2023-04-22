@@ -1,6 +1,8 @@
 package vo
 
 import (
+	errApp "ortisan-broker/go-commons/error"
+
 	"golang.org/x/crypto/bcrypt"
 )
 

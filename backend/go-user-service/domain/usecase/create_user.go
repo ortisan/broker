@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	errApp "ortisan-broker/go-commons/error"
 	"ortisan-broker/go-user-service/domain/entity"
 	"ortisan-broker/go-user-service/domain/repository"
 
@@ -25,7 +26,7 @@ func NewCreateUserUseCase(createUserRepository repository.CreateUser) (CreateUse
 	}).Info("Creating user...")
 
 	if createUserRepository == nil {
-		return nil, entity.NewBadArgumentError("createUserUseCase is required")
+		return nil, errApp.NewBadArgumentError("createUserUseCase is required")
 	}
 	return &createUser{
 		createUserRepository: createUserRepository,

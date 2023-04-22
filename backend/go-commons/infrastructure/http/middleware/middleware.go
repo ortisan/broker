@@ -1,16 +1,16 @@
-package router
+package middleware
 
 import (
 	"net/http"
+	"ortisan-broker/go-commons/adapter/dto"
 	errApp "ortisan-broker/go-commons/error"
-	"ortisan-broker/go-user-service/adapter/dto"
-	"ortisan-broker/go-user-service/application"
+
 	"runtime/debug"
 
 	"github.com/gin-gonic/gin"
 )
 
-func recovery() gin.HandlerFunc {
+func RecoveryMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
@@ -31,19 +31,4 @@ func recovery() gin.HandlerFunc {
 		}()
 		c.Next()
 	}
-}
-
-func NewRouter(createUserApplication application.CreateUserApplication, getUserApplication application.GetUserApplication) (*gin.Engine, error) {
-	r := gin.Default()
-	r.Use(gin.Logger())
-	r.Use(recovery())
-	_, errorCreate := NewCreateUserRouter(r, createUserApplication)
-	if errorCreate != nil {
-		return nil, errorCreate
-	}
-	_, errorGetUser := NewGetUserByIdRouter(r, getUserApplication)
-	if errorGetUser != nil {
-		return nil, errorGetUser
-	}
-	return r, nil
 }

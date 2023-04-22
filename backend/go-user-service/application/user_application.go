@@ -1,10 +1,10 @@
 package application
 
 import (
+	"ortisan-broker/go-commons/domain/vo"
 	errApp "ortisan-broker/go-commons/error"
 	"ortisan-broker/go-user-service/adapter/dto"
 	"ortisan-broker/go-user-service/domain/usecase"
-	"ortisan-broker/go-user-service/domain/vo"
 )
 
 type CreateUserApplication interface {
