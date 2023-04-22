@@ -69,11 +69,11 @@ func (l *logger) Fatal(args ...any) {
 	l.logger.Fatal(args...)
 }
 
-func NewLogger(logLevel string) (Logger, error) {
+func NewLogger() (Logger, error) {
 	var log = logrus.New()
 	log.SetFormatter(&logrus.JSONFormatter{})
 	log.SetOutput(os.Stdout)
-	level, err := logrus.ParseLevel(logLevel)
+	level, err := logrus.ParseLevel("info")
 	if err != nil {
 		return nil, errors.New("log level is invalid")
 	}

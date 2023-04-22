@@ -9,40 +9,44 @@ import (
 func AdaptUserDtoToUserDomain(user dto.User) (entity.User, error) {
 	id := user.ID
 	name := user.Name
+	username := user.Username
 	email := user.Email
 	password := user.Password
 	federationId := user.FederationId
 	profilePhotoUrl := user.ProfileAvatarUrl
 
-	idVo, errId := vo.NewIdFromValue(id)
-	if errId != nil {
-		return nil, errId
+	idVo, err := vo.NewIdFromValue(id)
+	if err != nil {
+		return nil, err
 	}
-	nameVo, errName := vo.NewName(name)
-	if errName != nil {
-		return nil, errName
+	nameVo, err := vo.NewName(name)
+	if err != nil {
+		return nil, err
 	}
-	emailVo, errEmail := vo.NewEmail(email)
-	if errEmail != nil {
-		return nil, errEmail
+	emailVo, err := vo.NewEmail(email)
+	if err != nil {
+		return nil, err
 	}
-	passwordVo, errPassword := vo.NewPasswordFromValue(password)
-	if errPassword != nil {
-		return nil, errPassword
+	usernameVo, err := vo.NewName(username)
+	if err != nil {
+		return nil, err
 	}
-	federationIdVo, errFederationId := vo.NewIdFromValue(federationId)
-	if errFederationId != nil {
-		return nil, errFederationId
+	passwordVo, err := vo.NewPasswordFromValue(password)
+	if err != nil {
+		return nil, err
+	}
+	federationIdVo, err := vo.NewIdFromValue(federationId)
+	if err != nil {
+		return nil, err
 	}
 	var profilePhotoUrlVo vo.Url
-	var errProfilePhotoUrl error
 	if profilePhotoUrl != "" {
-		profilePhotoUrlVo, errProfilePhotoUrl = vo.NewUrlFromValue(profilePhotoUrl)
-		if errProfilePhotoUrl != nil {
-			return nil, errProfilePhotoUrl
+		profilePhotoUrlVo, err = vo.NewUrlFromValue(profilePhotoUrl)
+		if err != nil {
+			return nil, err
 		}
 	}
-	userEntity, err := entity.NewUser(idVo, nameVo, emailVo, passwordVo, federationIdVo, profilePhotoUrlVo)
+	userEntity, err := entity.NewUser(idVo, nameVo, emailVo, usernameVo, passwordVo, federationIdVo, profilePhotoUrlVo)
 	return userEntity, err
 }
 
@@ -53,9 +57,11 @@ func AdaptUserDomainToUserDto(user entity.User) (dto.User, error) {
 	}
 	return dto.User{
 		ID:               user.Id().Value(),
-		FederationId:     user.FederationId().Value(),
 		Name:             user.Name().Value(),
 		Email:            user.Email().Value(),
+		Username:         user.Name().Value(),
+		Password:         user.Password().Value(),
+		FederationId:     user.FederationId().Value(),
 		ProfileAvatarUrl: profileUrlStr,
 	}, nil
 }

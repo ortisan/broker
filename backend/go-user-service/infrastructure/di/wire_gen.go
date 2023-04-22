@@ -29,7 +29,11 @@ func ConfigRouters() (*gin.Engine, error) {
 	if err != nil {
 		return nil, err
 	}
-	createUser, err := database.NewCreateUserPostgresRepository(db)
+	logger, err := log.NewLogger()
+	if err != nil {
+		return nil, err
+	}
+	createUser, err := database.NewCreateUserPostgresRepository(db, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +45,7 @@ func ConfigRouters() (*gin.Engine, error) {
 	if err != nil {
 		return nil, err
 	}
-	getUser, err := database.NewGetUserPostgresRepository(db)
+	getUser, err := database.NewGetUserPostgresRepository(db, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -76,4 +80,4 @@ var ApplicationsSet = wire.NewSet(application.NewCreateUserApplication, applicat
 
 var RoutersSet = wire.NewSet(controller.NewRouter)
 
-var AppSet = wire.NewSet(ConfigSet, DbSet, RepositoriesSet, UseCasesSet, ApplicationsSet, RoutersSet)
+var AppSet = wire.NewSet(ConfigSet, LoggerSet, DbSet, RepositoriesSet, UseCasesSet, ApplicationsSet, RoutersSet)

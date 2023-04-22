@@ -23,7 +23,7 @@ var RepositoriesSet = wire.NewSet(outDb.NewCreateUserPostgresRepository, outDb.N
 var UseCasesSet = wire.NewSet(usecase.NewCreateUserUseCase, usecase.NewGetUserUseCase)
 var ApplicationsSet = wire.NewSet(application.NewCreateUserApplication, application.NewGetUserApplication)
 var RoutersSet = wire.NewSet(controller.NewRouter)
-var AppSet = wire.NewSet(ConfigSet, DbSet, RepositoriesSet, UseCasesSet, ApplicationsSet, RoutersSet)
+var AppSet = wire.NewSet(ConfigSet, LoggerSet, DbSet, RepositoriesSet, UseCasesSet, ApplicationsSet, RoutersSet)
 
 func ConfigRouters() (*gin.Engine, error) {
 	wire.Build(AppSet)

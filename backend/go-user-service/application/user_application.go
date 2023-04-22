@@ -17,17 +17,17 @@ type createUserApplication struct {
 
 func (cua *createUserApplication) CreateUser(user dto.User) (*dto.User, error) {
 	user.ID = vo.NewId().Value()
-	userEntity, errAdaptDomain := AdaptUserDtoToUserDomain(user)
-	if errAdaptDomain != nil {
-		return nil, errAdaptDomain
+	userEntity, err := AdaptUserDtoToUserDomain(user)
+	if err != nil {
+		return nil, err
 	}
-	createdUser, errUseCase := cua.usecase.CreateUser(userEntity)
-	if errUseCase != nil {
-		return nil, errUseCase
+	createdUser, err := cua.usecase.CreateUser(userEntity)
+	if err != nil {
+		return nil, err
 	}
-	createdUserDto, errAdaptDto := AdaptUserDomainToUserDto(createdUser)
-	if errAdaptDto != nil {
-		return nil, errAdaptDto
+	createdUserDto, err := AdaptUserDomainToUserDto(createdUser)
+	if err != nil {
+		return nil, err
 	}
 	return &createdUserDto, nil
 }

@@ -9,6 +9,7 @@ type User interface {
 	Id() vo.Id
 	Name() vo.Name
 	Email() vo.Email
+	Username() vo.Name
 	Password() vo.Password
 	FederationId() vo.Id
 	ProfileAvatarUrl() vo.Url
@@ -18,6 +19,7 @@ type user struct {
 	id               vo.Id
 	name             vo.Name
 	email            vo.Email
+	username         vo.Name
 	password         vo.Password
 	federationId     vo.Id
 	profileAvatarUrl vo.Url
@@ -32,6 +34,9 @@ func (u *user) Name() vo.Name {
 func (u *user) Email() vo.Email {
 	return u.email
 }
+func (u *user) Username() vo.Name {
+	return u.name
+}
 func (u *user) Password() vo.Password {
 	return u.password
 }
@@ -45,6 +50,7 @@ func (u *user) ProfileAvatarUrl() vo.Url {
 func NewUser(id vo.Id,
 	name vo.Name,
 	email vo.Email,
+	username vo.Name,
 	password vo.Password,
 	federationId vo.Id,
 	profileAvatarUrl vo.Url) (User, error) {
@@ -57,6 +63,9 @@ func NewUser(id vo.Id,
 	if email == nil {
 		return nil, errApp.NewBadArgumentError("email is required")
 	}
+	if username == nil {
+		return nil, errApp.NewBadArgumentError("username is required")
+	}
 	if password == nil {
 		return nil, errApp.NewBadArgumentError("password is required")
 	}
@@ -67,6 +76,7 @@ func NewUser(id vo.Id,
 		id:               id,
 		name:             name,
 		email:            email,
+		username:         username,
 		password:         password,
 		federationId:     federationId,
 		profileAvatarUrl: profileAvatarUrl,

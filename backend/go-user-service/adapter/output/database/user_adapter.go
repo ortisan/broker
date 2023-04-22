@@ -13,8 +13,15 @@ func AdaptUserToModel(user entity.User) (*User, error) {
 	}
 	return &User{
 		ID:               user.Id().Value(),
+		Name:             user.Name().Value(),
 		Email:            user.Email().Value(),
+		Username:         user.Username().Value(),
+		Password:         user.Password().Value(),
 		FederationId:     user.FederationId().Value(),
 		ProfileAvatarUrl: profileAvatarUrl,
 	}, nil
+}
+
+func AdaptUserModelToUserDomain(user *User) (entity.User, error) {
+	return nil, nil
 }

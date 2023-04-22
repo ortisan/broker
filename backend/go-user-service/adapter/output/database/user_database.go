@@ -20,18 +20,25 @@ type CreateUserPostgresRepository struct {
 
 func (cug *CreateUserPostgresRepository) Create(user entity.User) (entity.User, error) {
 	cug.logger.Infof("Creating user %v", user)
-	result := cug.db.Create(&user)
+	userModel, err := AdaptUserToModel(user)
+	if err != nil {
+		return nil, err
+	}
+	result := cug.db.Create(&userModel)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return user, nil
 }
 
-func NewCreateUserPostgresRepository(db *gorm.DB) (repository.CreateUser, error) {
+func NewCreateUserPostgresRepository(db *gorm.DB, logger log.Logger) (repository.CreateUser, error) {
 	if db == nil {
 		return nil, errors.New("db is required")
 	}
-	return &CreateUserPostgresRepository{db: db}, nil
+	if logger == nil {
+		return nil, errors.New("logger is required")
+	}
+	return &CreateUserPostgresRepository{db: db, logger: logger}, nil
 }
 
 type getUserPostgresRepository struct {
@@ -49,9 +56,12 @@ func (gup *getUserPostgresRepository) GetById(id vo.Id) (entity.User, error) {
 	return user, nil
 }
 
-func NewGetUserPostgresRepository(db *gorm.DB) (repository.GetUser, error) {
+func NewGetUserPostgresRepository(db *gorm.DB, logger log.Logger) (repository.GetUser, error) {
 	if db == nil {
 		return nil, errors.New("db is required")
 	}
-	return &getUserPostgresRepository{db: db}, nil
+	if logger == nil {
+		return nil, errors.New("logger is required")
+	}
+	return &getUserPostgresRepository{db: db, logger: logger}, nil
 }
