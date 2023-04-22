@@ -59,3 +59,27 @@ func NewBadArgumentError(msg string) error {
 func NewBadArgumentErrorWithCause(msg string, cause error) error {
 	return &BadArgumentError{&baseError{msg: msg, cause: cause, stackTrace: string(debug.Stack())}}
 }
+
+type ConflictError struct {
+	*baseError
+}
+
+func NewConflictError(msg string) error {
+	return &ConflictError{&baseError{msg: msg, stackTrace: string(debug.Stack())}}
+}
+
+func NewConflictErrorWithCause(msg string, cause error) error {
+	return &ConflictError{&baseError{msg: msg, cause: cause, stackTrace: string(debug.Stack())}}
+}
+
+type UnprocessableEntityError struct {
+	*baseError
+}
+
+func NewUnprocessableEntityError(msg string) error {
+	return &UnprocessableEntityError{&baseError{msg: msg, stackTrace: string(debug.Stack())}}
+}
+
+func NewUnprocessableEntityErrorWithCause(msg string, cause error) error {
+	return &UnprocessableEntityError{&baseError{msg: msg, cause: cause, stackTrace: string(debug.Stack())}}
+}

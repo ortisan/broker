@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"ortisan-broker/go-commons/domain/vo"
 	"ortisan-broker/go-commons/infrastructure/log"
+	"strings"
 
 	errApp "ortisan-broker/go-commons/error"
 	"ortisan-broker/go-user-service/domain/entity"
@@ -12,6 +13,8 @@ import (
 
 	"gorm.io/gorm"
 )
+
+const errUniqueConstraint = "ERROR: duplicate key value violates unique constraint"
 
 type CreateUserPostgresRepository struct {
 	db     *gorm.DB
@@ -26,6 +29,9 @@ func (cug *CreateUserPostgresRepository) Create(user entity.User) (entity.User, 
 	}
 	result := cug.db.Create(&userModel)
 	if result.Error != nil {
+		if strings.Contains(result.Error.Error(), errUniqueConstraint) {
+			return nil, errApp.NewConflictErrorWithCause("there is another with same data.", result.Error)
+		}
 		return nil, result.Error
 	}
 	return user, nil
