@@ -3,11 +3,28 @@ package controller
 import (
 	"net/http"
 
+	"ortisan-broker/go-commons/infrastructure/http/middleware"
 	"ortisan-broker/go-sts-service/dto"
+	"ortisan-broker/go-user-service/application"
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
+
+func NewRouter(createUserApplication application.CreateUserApplication, getUserApplication application.GetUserApplication) (*gin.Engine, error) {
+	r := gin.Default()
+	r.Use(gin.Logger())
+	r.Use(middleware.RecoveryMiddleware())
+	_, errorCreate := NewCreateUserRouter(r, createUserApplication)
+	if errorCreate != nil {
+		return nil, errorCreate
+	}
+	_, errorGetUser := NewGetUserByIdRouter(r, getUserApplication)
+	if errorGetUser != nil {
+		return nil, errorGetUser
+	}
+	return r, nil
+}
 
 func GenerateClientCredentials(c *gin.Context) {
 	var req dto.ClientCredentialsRequest
