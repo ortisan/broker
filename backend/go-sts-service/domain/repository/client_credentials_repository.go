@@ -1,9 +1,12 @@
 package repository
 
-import "ortisan-broker/go-sts-service/domain/entity"
+import (
+	"context"
+	"ortisan-broker/go-sts-service/domain/entity"
+)
 
 type ClientCredentialsRepository interface {
-	CreateClientCredentials(cr entity.ClientCredentials) (entity.ClientCredentials, error)
-	FindByClientId(clientId string) (entity.ClientCredentials, error)
-	FindByClientName(clientName string) (entity.ClientCredentials, error)
+	CreateClientCredentials(ctx context.Context, clientCredentials entity.ClientCredentials) (entity.ClientCredentials, error)
+	FindByClientId(ctx context.Context, clientId string) (entity.ClientCredentials, error)
+	FindByClientName(ctx context.Context, clientName string) (entity.ClientCredentials, error)
 }

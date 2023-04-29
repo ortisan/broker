@@ -6,16 +6,21 @@ import (
 	"ortisan-broker/go-sts-service/domain/entity"
 )
 
-func AdaptClientCredentialsDtoToClientCredentialsDomain(clientCredentials dto.ClientCredentialsRequest) (entity.ClientCredentials, error) {
-	clientName := clientCredentials.ClientName
-	clientNameVo, err := vo.NewName(clientName)
+type ClientCredentialsAdapter interface {
+	AdaptFromDtoToDomain(clientCredentials dto.ClientCredentialsRequest) (entity.ClientCredentials, error)
+	AdaptFromDomainToDto(clientCredentials entity.ClientCredentials) (*dto.ClientCredentials, error)
+}
+
+type clientCredentialsAdapter struct {
+}
+
+func (cca clientCredentialsAdapter) AdaptFromDtoToDomain(clientCredentials dto.ClientCredentialsRequest) (entity.ClientCredentials, error) {
+	clientName, err := vo.NewName(clientCredentials.ClientName)
 	if err != nil {
 		return nil, err
 	}
-	clientIdVo := vo.NewId()
-	clientSecret, err := vo.NewSecret()
-		return nil, err
-	}
+	clientId := vo.NewId()
+	clientSecret := vo.NewSecret()
 	clientCredentialsEntity, err := entity.NewClientCredentials(clientName, clientId, clientSecret)
 	if err != nil {
 		return nil, err
@@ -23,18 +28,10 @@ func AdaptClientCredentialsDtoToClientCredentialsDomain(clientCredentials dto.Cl
 	return clientCredentialsEntity, err
 }
 
-func AdaptUserDomainToUserDto(user entity.User) (dto.User, error) {
-	var profileUrlStr string
-	if user.ProfileAvatarUrl() != nil {
-		profileUrlStr = user.ProfileAvatarUrl().Value()
-	}
-	return dto.User{
-		ID:               user.Id().Value(),
-		Name:             user.Name().Value(),
-		Email:            user.Email().Value(),
-		Username:         user.Username().Value(),
-		Password:         user.Password().Value(),
-		FederationId:     user.FederationId().Value(),
-		ProfileAvatarUrl: profileUrlStr,
+func (cca clientCredentialsAdapter) AdaptFromDomainToDto(clientCredentials entity.ClientCredentials) (*dto.ClientCredentials, error) {
+	return &dto.ClientCredentials{
+		ClientName:   clientCredentials.ClientName().Value(),
+		ClientId:     clientCredentials.ClientId().Value(),
+		ClientSecret: clientCredentials.ClientSecret().Value(),
 	}, nil
 }

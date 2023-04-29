@@ -38,26 +38,18 @@ func (o *oauthToken) ExpirationTime() time.Time {
 	return o.expirationTime
 }
 
-func newToken(credentials ClientCredentials) (OauthToken, error) {
-	atClaims := jwt.MapClaims{}
-	atClaims["authorized"] = true
-	atClaims["client_id"] = credentials.ClientId().Value()
-	atClaims["client_name"] = credentials.ClientName().Value()
-	atClaims["exp"] = time.Now().Add(time.Minute * 15).Unix()
-	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
-	at.Header["client_id"] = credentials.ClientId().Value()
-	token, err := at.SignedString([]byte(credentials.ClientSecret().Value()))
-	if err != nil {
-		return nil, errApp.NewBaseErrorWithCause("Error to generate token.", err)
+func NewOauthTokenFromToken(credentials ClientCredentials, token string) (OauthToken, error) {
+	if credentials == nil {
+		return nil, errApp.NewBadArgumentError("client credentials is required")
 	}
-	return &oauthToken{clientCredentials: credentials, value: token}, nil
-}
+	if token == "" {
+		return nil, errApp.NewBadArgumentError("token is required")
+	}
 
-func parseToken(token string, credentials ClientCredentials) (OauthToken, error) {
 	claims := jwt.MapClaims{}
 	jwtToken, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, errApp.NewBadArgumentError(fmt.Sprint("Unexpected signing method: %v", token.Header["alg"]))
+			return nil, errApp.NewBadArgumentError(fmt.Sprintf("Unexpected signing method: %v", token.Header["alg"]))
 		}
 		if _, ok := token.Header["client_id"]; !ok {
 			return nil, errApp.NewBadArgumentError("Invalid token. client_id was not found.")
@@ -77,20 +69,22 @@ func parseToken(token string, credentials ClientCredentials) (OauthToken, error)
 	return &oauthToken{clientCredentials: credentials, value: token}, nil
 }
 
-func NewOauthTokenFromToken(token string, credentials ClientCredentials) (OauthToken, error) {
-	if token == "" {
-		return nil, errApp.NewBadArgumentError("token is required")
-	}
-	if credentials == nil {
-		return nil, errApp.NewBadArgumentError("client credentials is required")
-	}
-	return parseToken(token, credentials)
-
-}
-
 func NewOauthToken(credentials ClientCredentials) (OauthToken, error) {
 	if credentials == nil {
 		return nil, errApp.NewBadArgumentError("client credentials is required")
 	}
-	return newToken()
+
+	atClaims := jwt.MapClaims{}
+	atClaims["authorized"] = true
+	atClaims["client_id"] = credentials.ClientId().Value()
+	atClaims["client_name"] = credentials.ClientName().Value()
+	atClaims["exp"] = time.Now().Add(time.Minute * 15).Unix()
+	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
+	at.Header["client_id"] = credentials.ClientId().Value()
+	token, err := at.SignedString([]byte(credentials.ClientSecret().Value()))
+	if err != nil {
+		return nil, errApp.NewBaseErrorWithCause("Error to generate token.", err)
+	}
+
+	return &oauthToken{clientCredentials: credentials, value: token}, nil
 }
