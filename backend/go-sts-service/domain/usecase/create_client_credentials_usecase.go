@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"errors"
+	errApp "ortisan-broker/go-commons/error"
 	"ortisan-broker/go-sts-service/domain/entity"
 	"ortisan-broker/go-sts-service/domain/repository"
 )
@@ -15,8 +16,19 @@ type createClientCredentialsUseCase struct {
 	clientCredentialsRepository repository.ClientCredentialsRepository
 }
 
-func (cccu createClientCredentialsUseCase) CreateClientCredentials(ctx context.Context, clientCredentials entity.ClientCredentials) (*entity.ClientCredentials, error) {
-	cccu.clientCredentialsRepository(ctx, clientCredentials)
+func (c createClientCredentialsUseCase) CreateClientCredentials(ctx context.Context, clientCredentials entity.ClientCredentials) (entity.ClientCredentials, error) {
+	if ctx == nil {
+		return nil, errApp.NewBadArgumentError("context is required")
+	}
+	if clientCredentials == nil {
+		return nil, errApp.NewBadArgumentError("client credentials entity is required")
+	}
+
+	clientCredentialsPersisted, err := c.clientCredentialsRepository.CreateClientCredentials(ctx, clientCredentials)
+	if err != nil {
+		return nil, errApp.NewBaseErrorWithCause("error to create client credentials", err)
+	}
+	return clientCredentialsPersisted, nil
 }
 
 func NewCreateClientCredentialsUseCase(clientCredentialsRepository repository.ClientCredentialsRepository) (CreateClientCredentialsUseCase, error) {
@@ -26,8 +38,4 @@ func NewCreateClientCredentialsUseCase(clientCredentialsRepository repository.Cl
 	return &createClientCredentialsUseCase{
 		clientCredentialsRepository: clientCredentialsRepository,
 	}, nil
-}
-
-type CreateOauthTokenUseCase interface {
-	CreateOauthToken(user entity.ClientCredentials) (entity.OauthToken, error)
 }

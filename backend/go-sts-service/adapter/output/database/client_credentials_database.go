@@ -28,10 +28,10 @@ func (ccr clientCredentialsRepository) FindByClientId(clientId string) (*ClientC
 }
 
 func (ccr clientCredentialsRepository) FindByClientName(clientName string) (*ClientCredentials, error) {
-	var cr ClientCredentials
-	err := ccr.db.Where("client_name = ?", clientName).First(&cr).Error
+	var clientCredentials ClientCredentials
+	err := ccr.db.Where("client_name = ?", clientName).First(&clientCredentials).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
-	return &cr, err
+	return &clientCredentials, err
 }

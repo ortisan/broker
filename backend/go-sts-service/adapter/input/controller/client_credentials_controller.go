@@ -34,7 +34,7 @@ func (cccc createClientCredentialsController) CreateClientCredentials(c *gin.Con
 		httpErr.HandleError(c, errApp.NewUnprocessableEntityErrorWithCause("Error to parse body.", err))
 		return
 	}
-	resp, err := cccc.CreateClientCredencialsApplication.CreateClientCredentials(req)
+	resp, err := cccc.CreateClientCredencialsApplication.CreateClientCredentials(c.Request.Context(), req)
 	if err != nil {
 		httpErr.HandleError(c, err)
 	} else {
