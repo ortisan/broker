@@ -9,16 +9,16 @@ package di
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
+	"ortisan-broker/go-commons/config"
+	"ortisan-broker/go-commons/infrastructure/database"
 	"ortisan-broker/go-commons/infrastructure/log"
 	"ortisan-broker/go-user-service/adapter/input/http/controller"
 	database2 "ortisan-broker/go-user-service/adapter/output/database"
 	"ortisan-broker/go-user-service/application"
-	"ortisan-broker/go-user-service/config"
 	"ortisan-broker/go-user-service/domain/usecase"
-	"ortisan-broker/go-user-service/infrastructure/database"
 )
 
-// Injectors from wire.go:
+// Injectors from di.go:
 
 func ConfigRouters() (*gin.Engine, error) {
 	configConfig, err := config.NewConfig()
@@ -64,7 +64,7 @@ func ConfigRouters() (*gin.Engine, error) {
 	return engine, nil
 }
 
-// wire.go:
+// di.go:
 
 var ConfigSet = wire.NewSet(config.NewConfig)
 

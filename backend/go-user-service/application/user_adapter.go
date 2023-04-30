@@ -1,17 +1,18 @@
 package application
 
 import (
+	"context"
 	"ortisan-broker/go-commons/domain/vo"
 	"ortisan-broker/go-user-service/adapter/dto"
 	"ortisan-broker/go-user-service/domain/entity"
 )
 
-func AdaptUserDtoToUserDomain(user dto.User) (entity.User, error) {
+func AdaptUserDtoToUserDomain(ctx context.Context, user dto.User) (entity.User, error) {
 	id := user.ID
 	name := user.Name
 	username := user.Username
 	email := user.Email
-	password := user.Password
+	secret := user.Password
 	federationId := user.FederationId
 	profilePhotoUrl := user.ProfileAvatarUrl
 
@@ -31,7 +32,7 @@ func AdaptUserDtoToUserDomain(user dto.User) (entity.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	passwordVo, err := vo.NewPasswordFromValue(password)
+	secretVo, err := vo.NewSecretFromValue(secret)
 	if err != nil {
 		return nil, err
 	}
@@ -46,11 +47,11 @@ func AdaptUserDtoToUserDomain(user dto.User) (entity.User, error) {
 			return nil, err
 		}
 	}
-	userEntity, err := entity.NewUser(idVo, nameVo, emailVo, usernameVo, passwordVo, federationIdVo, profilePhotoUrlVo)
+	userEntity, err := entity.NewUser(idVo, nameVo, emailVo, usernameVo, secretVo, federationIdVo, profilePhotoUrlVo)
 	return userEntity, err
 }
 
-func AdaptUserDomainToUserDto(user entity.User) (dto.User, error) {
+func AdaptUserDomainToUserDto(ctx context.Context, user entity.User) (dto.User, error) {
 	var profileUrlStr string
 	if user.ProfileAvatarUrl() != nil {
 		profileUrlStr = user.ProfileAvatarUrl().Value()
@@ -60,7 +61,7 @@ func AdaptUserDomainToUserDto(user entity.User) (dto.User, error) {
 		Name:             user.Name().Value(),
 		Email:            user.Email().Value(),
 		Username:         user.Username().Value(),
-		Password:         user.Password().Value(),
+		Password:         user.Secret().Value(),
 		FederationId:     user.FederationId().Value(),
 		ProfileAvatarUrl: profileUrlStr,
 	}, nil

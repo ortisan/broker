@@ -18,7 +18,7 @@ func AdaptUserEntityToUserModel(user entity.User) (*User, error) {
 		Name:             user.Name().Value(),
 		Email:            user.Email().Value(),
 		Username:         user.Username().Value(),
-		Password:         user.Password().Value(),
+		Secret:           user.Secret().Value(),
 		FederationId:     user.FederationId().Value(),
 		ProfileAvatarUrl: profileAvatarUrl,
 		CreatedAt:        time.Now(),
@@ -42,7 +42,7 @@ func AdaptUserModelToUserDomain(user *User) (entity.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	password, err := vo.NewPasswordFromValueCrypted(user.Password)
+	password, err := vo.NewSecretFromValueCrypted(user.Secret)
 	if err != nil {
 		return nil, err
 	}

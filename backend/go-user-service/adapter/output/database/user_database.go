@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"ortisan-broker/go-commons/domain/vo"
@@ -16,12 +17,12 @@ import (
 
 const errUniqueConstraint = "ERROR: duplicate key value violates unique constraint"
 
-type CreateUserPostgresRepository struct {
+type createUserPostgresRepository struct {
 	db     *gorm.DB
 	logger log.Logger
 }
 
-func (cug *CreateUserPostgresRepository) Create(user entity.User) (entity.User, error) {
+func (cug *createUserPostgresRepository) Create(ctx context.Context, user entity.User) (entity.User, error) {
 	cug.logger.Infof("Creating user %v", user)
 	userModel, err := AdaptUserEntityToUserModel(user)
 	if err != nil {
@@ -44,7 +45,7 @@ func NewCreateUserPostgresRepository(db *gorm.DB, logger log.Logger) (repository
 	if logger == nil {
 		return nil, errors.New("logger is required")
 	}
-	return &CreateUserPostgresRepository{db: db, logger: logger}, nil
+	return &createUserPostgresRepository{db: db, logger: logger}, nil
 }
 
 type getUserPostgresRepository struct {
@@ -52,10 +53,10 @@ type getUserPostgresRepository struct {
 	logger log.Logger
 }
 
-func (gup *getUserPostgresRepository) GetById(id vo.Id) (entity.User, error) {
+func (gup *getUserPostgresRepository) GetById(ctx context.Context, id vo.Id) (entity.User, error) {
 	gup.logger.Infof("Getting user by id: %v", id.Value())
 	var user User
-	gup.db.Debug().Where("id = ?", id.Value()).Find(&user)
+	gup.db.Where("id = ?", id.Value()).Find(&user)
 	if user.ID == "" {
 		return nil, errApp.NewNotFoundError(fmt.Sprintf("User not found for id %s", id.Value()))
 	}

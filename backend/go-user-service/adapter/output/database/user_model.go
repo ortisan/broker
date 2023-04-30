@@ -10,7 +10,7 @@ type User struct {
 	Name             string
 	Email            string
 	Username         string
-	Password         string
+	Secret           string
 	FederationId     string
 	ProfileAvatarUrl sql.NullString
 	CreatedAt        time.Time

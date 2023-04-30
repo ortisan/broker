@@ -10,7 +10,7 @@ type User interface {
 	Name() vo.Name
 	Email() vo.Email
 	Username() vo.Name
-	Password() vo.Password
+	Secret() vo.Secret
 	FederationId() vo.Id
 	ProfileAvatarUrl() vo.Url
 }
@@ -20,7 +20,7 @@ type user struct {
 	name             vo.Name
 	email            vo.Email
 	username         vo.Name
-	password         vo.Password
+	secret           vo.Secret
 	federationId     vo.Id
 	profileAvatarUrl vo.Url
 }
@@ -37,8 +37,8 @@ func (u *user) Email() vo.Email {
 func (u *user) Username() vo.Name {
 	return u.name
 }
-func (u *user) Password() vo.Password {
-	return u.password
+func (u *user) Secret() vo.Secret {
+	return u.secret
 }
 func (u *user) FederationId() vo.Id {
 	return u.federationId
@@ -51,7 +51,7 @@ func NewUser(id vo.Id,
 	name vo.Name,
 	email vo.Email,
 	username vo.Name,
-	password vo.Password,
+	secret vo.Secret,
 	federationId vo.Id,
 	profileAvatarUrl vo.Url) (User, error) {
 	if id == nil {
@@ -66,8 +66,8 @@ func NewUser(id vo.Id,
 	if username == nil {
 		return nil, errApp.NewBadArgumentError("username is required")
 	}
-	if password == nil {
-		return nil, errApp.NewBadArgumentError("password is required")
+	if secret == nil {
+		return nil, errApp.NewBadArgumentError("secret is required")
 	}
 	if federationId == nil {
 		return nil, errApp.NewBadArgumentError("federation id is required")
@@ -77,7 +77,7 @@ func NewUser(id vo.Id,
 		name:             name,
 		email:            email,
 		username:         username,
-		password:         password,
+		secret:           secret,
 		federationId:     federationId,
 		profileAvatarUrl: profileAvatarUrl,
 	}, nil

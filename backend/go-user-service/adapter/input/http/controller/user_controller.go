@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"net/http"
 	errApp "ortisan-broker/go-commons/error"
 	httpErr "ortisan-broker/go-commons/infrastructure/http/error"
@@ -21,7 +22,7 @@ func NewCreateUserRouter(router *gin.Engine, createUserApplication application.C
 	createRouter := &createUserRouter{
 		createUserApplication: createUserApplication,
 	}
-	router.POST("/api/users", createRouter.CreateUser)
+	router.POST("/api/v1/users", createRouter.CreateUser)
 	return router, nil
 
 }
@@ -32,7 +33,7 @@ func (cur *createUserRouter) CreateUser(c *gin.Context) {
 		httpErr.HandleError(c, errApp.NewUnprocessableEntityErrorWithCause("Error to parse body.", err))
 		return
 	}
-	resp, err := cur.createUserApplication.CreateUser(req)
+	resp, err := cur.createUserApplication.CreateUser(c.Request.Context(), req)
 	if err != nil {
 		httpErr.HandleError(c, err)
 	} else {
@@ -50,12 +51,12 @@ type getUserByIdRouter struct {
 
 func NewGetUserByIdRouter(router *gin.Engine, getUserApplication application.GetUserApplication) (*gin.Engine, error) {
 	if getUserApplication == nil {
-		return nil, errApp.NewBadArgumentError("get user application is required")
+		return nil, errors.New("get user application is required")
 	}
 	getRouter := &getUserByIdRouter{
 		getUserApplication: getUserApplication,
 	}
-	router.GET("/api/users/:id", getRouter.GetUserById)
+	router.GET("/api/v1/users/:id", getRouter.GetUserById)
 	return router, nil
 }
 
@@ -65,7 +66,7 @@ func (gur *getUserByIdRouter) GetUserById(c *gin.Context) {
 		httpErr.HandleError(c, errApp.NewUnprocessableEntityErrorWithCause("Error to parse params.", err))
 		return
 	}
-	resp, err := gur.getUserApplication.GetUser(params.ID)
+	resp, err := gur.getUserApplication.GetUser(c.Request.Context(), params.ID)
 	if err != nil {
 		httpErr.HandleError(c, err)
 	} else {
