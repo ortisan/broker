@@ -31,20 +31,19 @@ func NewOauthTokenRouter(router *gin.Engine, oauthTokenController OauthTokenCont
 	return router, nil
 }
 
-func NewRouter(clientCredentialsController CreateClientCredentialsController) (*gin.Engine, error) {
+func NewRouter(clientCredentialsController CreateClientCredentialsController, oauthTokenController OauthTokenController) (*gin.Engine, error) {
 	router := gin.Default()
 	router.Use(gin.Logger())
 	router.Use(middleware.RecoveryMiddleware())
 
 	router.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
-	//r.POST("/client_credentials", GenerateClientCredentials)
-	//r.POST("/token", GenerateToken)
-	//r.POST("/validate_token", ValidateToken)
-
-	_, err := NewClientCredentialsRouter(router, clientCredentialsController)
-	if err != nil {
+	if _, err := NewClientCredentialsRouter(router, clientCredentialsController); err != nil {
 		return nil, err
 	}
+	if _, err := NewOauthTokenRouter(router, oauthTokenController); err != nil {
+		return nil, err
+	}
+
 	return router, nil
 }

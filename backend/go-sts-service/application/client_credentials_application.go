@@ -3,12 +3,13 @@ package application
 import (
 	"context"
 	"errors"
+	errApp "ortisan-broker/go-commons/error"
 	"ortisan-broker/go-sts-service/adapter/dto"
 	"ortisan-broker/go-sts-service/domain/usecase"
 )
 
 type CreateClientCredentialsApplication interface {
-	CreateClientCredentials(ctx context.Context, clientCredentials dto.ClientCredentialsRequest) (*dto.ClientCredentials, error)
+	CreateClientCredentials(ctx context.Context, clientCredentials *dto.ClientCredentialsRequest) (*dto.ClientCredentials, error)
 }
 
 type createClientCredentialsApplication struct {
@@ -30,7 +31,14 @@ func NewCreateClientCredentialsApplication(adapter ClientCredentialsAdapter, use
 	}, nil
 }
 
-func (ccca *createClientCredentialsApplication) CreateClientCredentials(ctx context.Context, input dto.ClientCredentialsRequest) (*dto.ClientCredentials, error) {
+func (ccca *createClientCredentialsApplication) CreateClientCredentials(ctx context.Context, input *dto.ClientCredentialsRequest) (*dto.ClientCredentials, error) {
+	if ctx == nil {
+		return nil, errApp.NewBadArgumentError("context is required")
+	}
+	if input == nil {
+		return nil, errApp.NewBadArgumentError("client credentials request is required")
+	}
+
 	clientCredentials, err := ccca.adapter.AdaptFromDtoToDomain(ctx, input)
 	if err != nil {
 		return nil, err

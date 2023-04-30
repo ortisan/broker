@@ -1,12 +1,13 @@
 package application
 
 import (
+	"context"
 	"ortisan-broker/go-commons/domain/vo"
 	"ortisan-broker/go-user-service/adapter/dto"
 	"ortisan-broker/go-user-service/domain/entity"
 )
 
-func AdaptUserDtoToUserDomain(user dto.User) (entity.User, error) {
+func AdaptUserDtoToUserDomain(ctx context.Context, user dto.User) (entity.User, error) {
 	id := user.ID
 	name := user.Name
 	username := user.Username
@@ -50,7 +51,7 @@ func AdaptUserDtoToUserDomain(user dto.User) (entity.User, error) {
 	return userEntity, err
 }
 
-func AdaptUserDomainToUserDto(user entity.User) (dto.User, error) {
+func AdaptUserDomainToUserDto(ctx context.Context, user entity.User) (dto.User, error) {
 	var profileUrlStr string
 	if user.ProfileAvatarUrl() != nil {
 		profileUrlStr = user.ProfileAvatarUrl().Value()

@@ -10,13 +10,15 @@ type ClientCredentials struct {
 	ClientSecret string `json:"client_secret,omitempty" validate:"required"`
 }
 
-type TokenRequest struct {
+type OauthTokenRequest struct {
 	ClientId     string `json:"client_id,omitempty" validate:"required"`
 	ClientSecret string `json:"client_secret,omitempty" validate:"required"`
 }
 
-type TokenResponse struct {
-	Token string `json:"token,omitempty"`
+type OauthTokenResponse struct {
+	ClientId     string `json:"client_id,omitempty" validate:"required"`
+	ClientSecret string `json:"client_secret,omitempty" validate:"required"`
+	Token        string `json:"token,omitempty"`
 }
 
 type ValidateTokenRequest struct {

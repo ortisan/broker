@@ -47,3 +47,19 @@ func NewClientCredentials(clientName vo.Name, clientId vo.Id, clientSecret vo.Se
 	}, nil
 
 }
+
+func NewClientCredentialsWithoutName(clientId vo.Id, clientSecret vo.Secret) (ClientCredentials, error) {
+
+	if clientId == nil {
+		return nil, errApp.NewBadArgumentError("client id is required")
+	}
+	if clientSecret == nil {
+		return nil, errApp.NewBadArgumentError("client secret is required")
+	}
+
+	return &clientCredentials{
+		clientId:     clientId,
+		clientSecret: clientSecret,
+	}, nil
+
+}

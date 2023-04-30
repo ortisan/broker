@@ -13,6 +13,7 @@ type OauthToken interface {
 	Value() string
 	Claims() map[string]any
 	ExpirationTime() time.Time
+	RenewToken() error
 }
 
 type oauthToken struct {
@@ -38,6 +39,30 @@ func (o *oauthToken) ExpirationTime() time.Time {
 	return o.expirationTime
 }
 
+func (o *oauthToken) RenewToken() error {
+	newToken, err := o.generateToken()
+	if err != nil {
+		return err
+	}
+	o.value = newToken
+	return nil
+}
+
+func (o *oauthToken) generateToken() (string, error) {
+	atClaims := jwt.MapClaims{}
+	atClaims["authorized"] = true
+	atClaims["client_id"] = o.clientCredentials.ClientId().Value()
+	atClaims["client_name"] = o.clientCredentials.ClientName().Value()
+	atClaims["exp"] = time.Now().Add(time.Minute * 15).Unix()
+	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
+	at.Header["client_id"] = o.clientCredentials.ClientId().Value()
+	token, err := at.SignedString([]byte(o.clientCredentials.ClientSecret().Value()))
+	if err != nil {
+		return "", errApp.NewBaseErrorWithCause("Error to generate token.", err)
+	}
+	return token, nil
+}
+
 func NewOauthTokenFromToken(credentials ClientCredentials, token string) (OauthToken, error) {
 	if credentials == nil {
 		return nil, errApp.NewBadArgumentError("client credentials is required")
@@ -54,8 +79,7 @@ func NewOauthTokenFromToken(credentials ClientCredentials, token string) (OauthT
 		if _, ok := token.Header["client_id"]; !ok {
 			return nil, errApp.NewBadArgumentError("Invalid token. client_id was not found.")
 		}
-
-		if token.Header["client_id"] != credentials.ClientId() {
+		if token.Header["client_id"] != credentials.ClientId().Value() {
 			return nil, errApp.NewBadArgumentError("Invalid token. Divergence of client_id.")
 		}
 

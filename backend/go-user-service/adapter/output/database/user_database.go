@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"ortisan-broker/go-commons/domain/vo"
@@ -21,7 +22,7 @@ type CreateUserPostgresRepository struct {
 	logger log.Logger
 }
 
-func (cug *CreateUserPostgresRepository) Create(user entity.User) (entity.User, error) {
+func (cug *CreateUserPostgresRepository) Create(ctx context.Context, user entity.User) (entity.User, error) {
 	cug.logger.Infof("Creating user %v", user)
 	userModel, err := AdaptUserEntityToUserModel(user)
 	if err != nil {
@@ -52,10 +53,10 @@ type getUserPostgresRepository struct {
 	logger log.Logger
 }
 
-func (gup *getUserPostgresRepository) GetById(id vo.Id) (entity.User, error) {
+func (gup *getUserPostgresRepository) GetById(ctx context.Context, id vo.Id) (entity.User, error) {
 	gup.logger.Infof("Getting user by id: %v", id.Value())
 	var user User
-	gup.db.Debug().Where("id = ?", id.Value()).Find(&user)
+	gup.db.Where("id = ?", id.Value()).Find(&user)
 	if user.ID == "" {
 		return nil, errApp.NewNotFoundError(fmt.Sprintf("User not found for id %s", id.Value()))
 	}

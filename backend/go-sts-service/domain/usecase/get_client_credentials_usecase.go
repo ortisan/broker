@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	errApp "ortisan-broker/go-commons/error"
 	"ortisan-broker/go-sts-service/domain/entity"
 	"ortisan-broker/go-sts-service/domain/repository"
@@ -31,4 +32,14 @@ func (g *getClientCredentialsUseCase) GetClientCredentialsByClientId(ctx context
 		return nil, errApp.NewNotFoundError("client credentials not founded")
 	}
 	return clientCredentialsPersisted, nil
+}
+
+func NewGetClientCredentialsUseCase(clientCredentialsRepository repository.ClientCredentialsRepository) (GetClientCredentialsUseCase, error) {
+	if clientCredentialsRepository == nil {
+		return nil, errors.New("client credentials repository is required")
+	}
+
+	return &getClientCredentialsUseCase{
+		clientCredentialsRepository: clientCredentialsRepository,
+	}, nil
 }

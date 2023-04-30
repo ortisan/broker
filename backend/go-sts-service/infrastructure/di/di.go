@@ -4,13 +4,11 @@
 package di
 
 import (
+	"ortisan-broker/go-commons/config"
 	"ortisan-broker/go-commons/infrastructure/log"
-	"ortisan-broker/go-user-service/adapter/input/http/controller"
-	outDb "ortisan-broker/go-user-service/adapter/output/database"
-	"ortisan-broker/go-user-service/application"
-	"ortisan-broker/go-user-service/config"
-	"ortisan-broker/go-user-service/domain/usecase"
-	infraDb "ortisan-broker/go-user-service/infrastructure/database"
+	"ortisan-broker/go-sts-service/adapter/input/controller"
+	"ortisan-broker/go-sts-service/application"
+	"ortisan-broker/go-sts-service/domain/usecase"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
@@ -18,12 +16,11 @@ import (
 
 var ConfigSet = wire.NewSet(config.NewConfig)
 var LoggerSet = wire.NewSet(log.NewLogger)
-var DbSet = wire.NewSet(infraDb.NewDB)
-var RepositoriesSet = wire.NewSet(outDb.NewCreateUserPostgresRepository, outDb.NewGetUserPostgresRepository)
-var UseCasesSet = wire.NewSet(usecase.NewCreateUserUseCase, usecase.NewGetUserUseCase)
-var ApplicationsSet = wire.NewSet(application.NewCreateUserApplication, application.NewGetUserApplication)
+var UseCasesSet = wire.NewSet(usecase.NewCreateClientCredentialsUseCase, usecase.NewGetClientCredentialsUseCase, usecase.NewCreateOauthTokenUseCase)
+var ApplicationsSet = wire.NewSet(application.NewClientCredentialsAdapter, application.NewCreateClientCredentialsApplication, application.NewOauthTokenAdapter, application.NewCreateOauthTokenApplication)
+var ControllersSet = wire.NewSet(controller.NewCreateClientCredentialsController, controller.NewOauthTokenController)
 var RoutersSet = wire.NewSet(controller.NewRouter)
-var AppSet = wire.NewSet(ConfigSet, LoggerSet, DbSet, RepositoriesSet, UseCasesSet, ApplicationsSet, RoutersSet)
+var AppSet = wire.NewSet(ConfigSet, LoggerSet, UseCasesSet, ApplicationsSet, ControllersSet, RoutersSet)
 
 func ConfigRouters() (*gin.Engine, error) {
 	wire.Build(AppSet)

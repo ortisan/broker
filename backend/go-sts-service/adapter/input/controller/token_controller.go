@@ -20,12 +20,12 @@ type oauthTokenController struct {
 }
 
 func (t *oauthTokenController) CreateOauthToken(c *gin.Context) {
-	var req dto.TokenRequest
+	var req dto.OauthTokenRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		httpErr.HandleError(c, errApp.NewUnprocessableEntityErrorWithCause("Error to parse body.", err))
 		return
 	}
-	resp, err := t.createTokenApplication.CreateOauthToken(c.Request.Context(), req)
+	resp, err := t.createTokenApplication.CreateOauthToken(c.Request.Context(), &req)
 	if err != nil {
 		httpErr.HandleError(c, err)
 	} else {

@@ -33,7 +33,7 @@ func (cur *createUserRouter) CreateUser(c *gin.Context) {
 		httpErr.HandleError(c, errApp.NewUnprocessableEntityErrorWithCause("Error to parse body.", err))
 		return
 	}
-	resp, err := cur.createUserApplication.CreateUser(req)
+	resp, err := cur.createUserApplication.CreateUser(c.Request.Context(), req)
 	if err != nil {
 		httpErr.HandleError(c, err)
 	} else {
@@ -66,7 +66,7 @@ func (gur *getUserByIdRouter) GetUserById(c *gin.Context) {
 		httpErr.HandleError(c, errApp.NewUnprocessableEntityErrorWithCause("Error to parse params.", err))
 		return
 	}
-	resp, err := gur.getUserApplication.GetUser(params.ID)
+	resp, err := gur.getUserApplication.GetUser(c.Request.Context(), params.ID)
 	if err != nil {
 		httpErr.HandleError(c, err)
 	} else {

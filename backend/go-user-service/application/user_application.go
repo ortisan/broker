@@ -19,15 +19,15 @@ type createUserApplication struct {
 
 func (cua *createUserApplication) CreateUser(ctx context.Context, user dto.User) (*dto.User, error) {
 	user.ID = vo.NewId().Value()
-	userEntity, err := AdaptUserDtoToUserDomain(user)
+	userEntity, err := AdaptUserDtoToUserDomain(ctx, user)
 	if err != nil {
 		return nil, err
 	}
-	createdUser, err := cua.usecase.CreateUser(userEntity)
+	createdUser, err := cua.usecase.CreateUser(ctx, userEntity)
 	if err != nil {
 		return nil, err
 	}
-	createdUserDto, err := AdaptUserDomainToUserDto(createdUser)
+	createdUserDto, err := AdaptUserDomainToUserDto(ctx, createdUser)
 	if err != nil {
 		return nil, err
 	}
@@ -44,23 +44,23 @@ func NewCreateUserApplication(usecase usecase.CreateUser) (CreateUserApplication
 }
 
 type GetUserApplication interface {
-	GetUser(userId string) (*dto.User, error)
+	GetUser(ctx context.Context, userId string) (*dto.User, error)
 }
 
 type getUserApplication struct {
 	getUserUseCase usecase.GetUser
 }
 
-func (gua *getUserApplication) GetUser(userId string) (*dto.User, error) {
+func (g *getUserApplication) GetUser(ctx context.Context, userId string) (*dto.User, error) {
 	id, err := vo.NewIdFromValue(userId)
 	if err != nil {
 		return nil, err
 	}
-	user, err := gua.getUserUseCase.GetUserById(id)
+	user, err := g.getUserUseCase.GetUserById(ctx, id)
 	if err != nil {
 		return nil, err
 	}
-	userDto, err := AdaptUserDomainToUserDto(user)
+	userDto, err := AdaptUserDomainToUserDto(ctx, user)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,7 @@ func (gua *getUserApplication) GetUser(userId string) (*dto.User, error) {
 
 func NewGetUserApplication(getUserUseCase usecase.GetUser) (GetUserApplication, error) {
 	if getUserUseCase == nil {
-		return nil, errApp.NewBadArgumentError("getUserUseCase is required")
+		return nil, errApp.NewBadArgumentError("get user use case is required")
 	}
 	return &getUserApplication{
 		getUserUseCase: getUserUseCase,
