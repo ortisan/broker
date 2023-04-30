@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	errApp "ortisan-broker/go-commons/error"
 	"ortisan-broker/go-user-service/domain/entity"
 	"ortisan-broker/go-user-service/domain/repository"
@@ -9,15 +10,15 @@ import (
 )
 
 type CreateUser interface {
-	CreateUser(user entity.User) (entity.User, error)
+	CreateUser(ctx context.Context, user entity.User) (entity.User, error)
 }
 
 type createUser struct {
 	createUserRepository repository.CreateUser
 }
 
-func (cu createUser) CreateUser(user entity.User) (entity.User, error) {
-	return cu.createUserRepository.Create(user)
+func (cu createUser) CreateUser(ctx context.Context, user entity.User) (entity.User, error) {
+	return cu.createUserRepository.Create(ctx, user)
 }
 
 func NewCreateUserUseCase(createUserRepository repository.CreateUser) (CreateUser, error) {

@@ -1,6 +1,8 @@
 package application
 
 import (
+	"context"
+	"errors"
 	"ortisan-broker/go-commons/domain/vo"
 	errApp "ortisan-broker/go-commons/error"
 	"ortisan-broker/go-user-service/adapter/dto"
@@ -8,14 +10,14 @@ import (
 )
 
 type CreateUserApplication interface {
-	CreateUser(dto.User) (*dto.User, error)
+	CreateUser(ctx context.Context, user dto.User) (*dto.User, error)
 }
 
 type createUserApplication struct {
 	usecase usecase.CreateUser
 }
 
-func (cua *createUserApplication) CreateUser(user dto.User) (*dto.User, error) {
+func (cua *createUserApplication) CreateUser(ctx context.Context, user dto.User) (*dto.User, error) {
 	user.ID = vo.NewId().Value()
 	userEntity, err := AdaptUserDtoToUserDomain(user)
 	if err != nil {
@@ -34,7 +36,7 @@ func (cua *createUserApplication) CreateUser(user dto.User) (*dto.User, error) {
 
 func NewCreateUserApplication(usecase usecase.CreateUser) (CreateUserApplication, error) {
 	if usecase == nil {
-		return nil, errApp.NewBadArgumentError("createUserUseCase is required")
+		return nil, errors.New("create user usecase is required")
 	}
 	return &createUserApplication{
 		usecase: usecase,

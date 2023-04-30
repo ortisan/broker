@@ -20,6 +20,17 @@ func NewClientCredentialsRouter(router *gin.Engine, clientCredentialsController 
 	return router, nil
 }
 
+func NewOauthTokenRouter(router *gin.Engine, oauthTokenController OauthTokenController) (*gin.Engine, error) {
+	if router == nil {
+		return nil, errors.New("router is required")
+	}
+	if oauthTokenController == nil {
+		return nil, errors.New("oauth token controller is required")
+	}
+	router.POST("/api/v1/oauthToken", oauthTokenController.CreateOauthToken)
+	return router, nil
+}
+
 func NewRouter(clientCredentialsController CreateClientCredentialsController) (*gin.Engine, error) {
 	router := gin.Default()
 	router.Use(gin.Logger())
