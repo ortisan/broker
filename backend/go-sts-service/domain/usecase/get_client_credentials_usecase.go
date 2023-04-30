@@ -24,7 +24,7 @@ func (g *getClientCredentialsUseCase) GetClientCredentialsByClientId(ctx context
 		return nil, errApp.NewBadArgumentError("client credentials entity is required")
 	}
 
-	clientCredentialsPersisted, err := g.clientCredentialsRepository.FindByClientId(ctx, clientCredentials.ClientId().Value())
+	clientCredentialsPersisted, err := g.clientCredentialsRepository.FindByClientId(ctx, clientCredentials.ClientId())
 	if err != nil {
 		return nil, errApp.NewBadArgumentErrorWithCause("error to getting client credentials", err)
 	}

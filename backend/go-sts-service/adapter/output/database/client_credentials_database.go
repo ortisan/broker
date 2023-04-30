@@ -1,8 +1,10 @@
 package database
 
 import (
+	"context"
 	"errors"
 	"ortisan-broker/go-commons/domain/vo"
+	errApp "ortisan-broker/go-commons/error"
 	"ortisan-broker/go-commons/infrastructure/log"
 	"ortisan-broker/go-sts-service/domain/entity"
 	"ortisan-broker/go-sts-service/domain/repository"
@@ -10,45 +12,71 @@ import (
 	"gorm.io/gorm"
 )
 
-type clientCredentialsRepository struct {
+type clientCredentialsPostgresRepository struct {
 	db      *gorm.DB
 	logger  log.Logger
 	adapter ClientCredentialsAdapter
 }
 
-func (ccr clientCredentialsRepository) CreateClientCredentials(cr entity.ClientCredentials) (entity.ClientCredentials, error) {
-	err := ccr.db.Create(cr).Error
+func (ccr clientCredentialsPostgresRepository) CreateClientCredentials(ctx context.Context, clientCredentials entity.ClientCredentials) (entity.ClientCredentials, error) {
+	if ctx == nil {
+		return nil, errApp.NewBadArgumentError("context is required")
+	}
+	if clientCredentials == nil {
+		return nil, errApp.NewBadArgumentError("client id is required")
+	}
+
+	clientCredentialsModel, err := ccr.adapter.AdaptFromDomainToModel(ctx, clientCredentials)
 	if err != nil {
 		return nil, err
 	}
-	return cr, nil
+
+	if err := ccr.db.Create(clientCredentialsModel).Error; err != nil {
+		return nil, err
+	}
+
+	return ccr.adapter.AdaptFromModelToDomain(ctx, clientCredentialsModel)
 }
 
-func (ccr clientCredentialsRepository) FindByClientId(clientId vo.Id) (entity.ClientCredentials, error) {
+func (ccr clientCredentialsPostgresRepository) FindByClientId(ctx context.Context, clientId vo.Id) (entity.ClientCredentials, error) {
+	if ctx == nil {
+		return nil, errApp.NewBadArgumentError("context is required")
+	}
+	if clientId == nil {
+		return nil, errApp.NewBadArgumentError("client id is required")
+	}
+
 	var clientCredentials ClientCredentials
 	err := ccr.db.Where("client_id = ?", clientId).First(&clientCredentials).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, nil
+		return nil, errApp.NewNotFoundError("client credentials not found")
 	}
 
-	return &clientCredentials, err
+	return ccr.adapter.AdaptFromModelToDomain(ctx, &clientCredentials)
 }
 
-func (ccr clientCredentialsRepository) FindByClientName(clientName vo.Name) (entity.ClientCredentials, error) {
+func (ccr clientCredentialsPostgresRepository) FindByClientName(ctx context.Context, clientName vo.Name) (entity.ClientCredentials, error) {
 	var clientCredentials ClientCredentials
 	err := ccr.db.Where("client_name = ?", clientName).First(&clientCredentials).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
-	return &clientCredentials, err
+
+	return ccr.adapter.AdaptFromModelToDomain(ctx, &clientCredentials)
 }
 
-func NewClientCredentialsRepository(adapter ClientCredentialsAdapter) (repository.ClientCredentialsRepository, error) {
+func NewClientCredentialsPostgresRepository(db *gorm.DB, logger log.Logger, adapter ClientCredentialsAdapter) (repository.ClientCredentialsRepository, error) {
+	if db == nil {
+		return nil, errors.New("db is required")
+	}
+	if logger == nil {
+		return nil, errors.New("logger is required")
+	}
 	if adapter == nil {
 		return nil, errors.New("client credentials adapter is required")
 	}
 
-	return &clientCredentialsRepository{
+	return &clientCredentialsPostgresRepository{
 		adapter: adapter,
 	}, nil
 }

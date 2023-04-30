@@ -17,12 +17,12 @@ import (
 
 const errUniqueConstraint = "ERROR: duplicate key value violates unique constraint"
 
-type CreateUserPostgresRepository struct {
+type createUserPostgresRepository struct {
 	db     *gorm.DB
 	logger log.Logger
 }
 
-func (cug *CreateUserPostgresRepository) Create(ctx context.Context, user entity.User) (entity.User, error) {
+func (cug *createUserPostgresRepository) Create(ctx context.Context, user entity.User) (entity.User, error) {
 	cug.logger.Infof("Creating user %v", user)
 	userModel, err := AdaptUserEntityToUserModel(user)
 	if err != nil {
@@ -45,7 +45,7 @@ func NewCreateUserPostgresRepository(db *gorm.DB, logger log.Logger) (repository
 	if logger == nil {
 		return nil, errors.New("logger is required")
 	}
-	return &CreateUserPostgresRepository{db: db, logger: logger}, nil
+	return &createUserPostgresRepository{db: db, logger: logger}, nil
 }
 
 type getUserPostgresRepository struct {
