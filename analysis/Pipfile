@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 pandas = "*"
 jupyter = "*"
+requests = "*"
+tensorflow = "==2.12.*"
+matplotlib = "*"
 
 [dev-packages]
 pytest = "*"
