@@ -10,23 +10,23 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./scripts/init.sql:/docker-entrypoint-initdb.d/
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/001-init.sql
 
 
-      #  fluent-bit:
-#    image: fluent/fluent-bit
-#    ports:
-#      - "24224:24224/tcp"
-#      - "24224:24224/udp"
-#    volumes:
-#      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+  fluent-bit:
+    image: fluent/fluent-bit
+    ports:
+      - "24224:24224/tcp"
+      - "24224:24224/udp"
+    volumes:
+      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
 
-#  prometheus:
-#    image: prom/prometheus:latest
-#    ports:
-#      - "9090:9090"
-#    volumes:
-#      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yaml
       
   grafana:
     image: grafana/grafana:latest

@@ -9,24 +9,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func HandleError(c *gin.Context, err error) {
-	switch err.(type) {
+func HandleError(c *gin.Context, errParam error) {
+	switch errParam.(type) {
 	case *errapp.BadArgumentError:
-		error := err.(*errapp.BadArgumentError)
-		c.JSON(http.StatusBadRequest, dto.Error{Message: error.Error(), Cause: error.Cause(), StackTrace: error.StackTrace()})
+		err := errParam.(*errapp.BadArgumentError)
+		c.JSON(http.StatusBadRequest, dto.Error{Message: err.Error(), Cause: err.Cause(), StackTrace: err.StackTrace()})
 	case *errapp.AuthError:
-		error := err.(*errapp.AuthError)
-		c.JSON(http.StatusUnauthorized, dto.Error{Message: error.Error(), Cause: error.Cause(), StackTrace: error.StackTrace()})
+		err := errParam.(*errapp.AuthError)
+		c.JSON(http.StatusUnauthorized, dto.Error{Message: err.Error(), Cause: err.Cause(), StackTrace: err.StackTrace()})
 	case *errapp.NotFoundError:
-		error := err.(*errapp.NotFoundError)
-		c.JSON(http.StatusNotFound, dto.Error{Message: error.Error(), Cause: error.Cause(), StackTrace: error.StackTrace()})
+		err := errParam.(*errapp.NotFoundError)
+		c.JSON(http.StatusNotFound, dto.Error{Message: err.Error(), Cause: err.Cause(), StackTrace: err.StackTrace()})
 	case *errapp.ConflictError:
-		error := err.(*errapp.ConflictError)
-		c.JSON(http.StatusConflict, dto.Error{Message: error.Error(), Cause: error.Cause(), StackTrace: error.StackTrace()})
+		err := errParam.(*errapp.ConflictError)
+		c.JSON(http.StatusConflict, dto.Error{Message: err.Error(), Cause: err.Cause(), StackTrace: err.StackTrace()})
 	case *errapp.UnprocessableEntityError:
-		error := err.(*errapp.UnprocessableEntityError)
-		c.JSON(http.StatusUnprocessableEntity, dto.Error{Message: error.Error(), Cause: error.Cause(), StackTrace: error.StackTrace()})
+		err := errParam.(*errapp.UnprocessableEntityError)
+		c.JSON(http.StatusUnprocessableEntity, dto.Error{Message: err.Error(), Cause: err.Cause(), StackTrace: err.StackTrace()})
 	default:
-		c.JSON(http.StatusInternalServerError, dto.Error{Message: err.(error).Error(), StackTrace: string(debug.Stack())})
+		c.JSON(http.StatusInternalServerError, dto.Error{Message: errParam.(error).Error(), StackTrace: string(debug.Stack())})
 	}
 }

@@ -2,11 +2,14 @@ package http
 
 import (
 	"errors"
+	"go.opentelemetry.io/otel"
 	"net/http"
 	errapp "ortisan-broker/go-commons/error"
-	httpErr "ortisan-broker/go-commons/infrastructure/http/error"
+	httperr "ortisan-broker/go-commons/infrastructure/http/error"
 	"ortisan-broker/go-sts-service/adapter/dto"
 	"ortisan-broker/go-sts-service/application"
+	"reflect"
+	"runtime"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,15 +22,19 @@ type oauthTokenController struct {
 	createTokenApplication application.CreateOauthTokenApplication
 }
 
-func (t *oauthTokenController) CreateOauthToken(c *gin.Context) {
+func (otc *oauthTokenController) CreateOauthToken(c *gin.Context) {
+	pc, _, _, _ := runtime.Caller(0)
+	newCtx, span := otel.Tracer(reflect.TypeOf(otc).String()).Start(c, runtime.FuncForPC(pc).Name())
+	defer span.End()
+
 	var req dto.OauthTokenRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		httpErr.HandleError(c, errapp.NewUnprocessableEntityErrorWithCause("Error to parse body.", err))
+		httperr.HandleError(c, errapp.NewUnprocessableEntityErrorWithCause("Error to parse body.", err))
 		return
 	}
-	resp, err := t.createTokenApplication.CreateOauthToken(c.Request.Context(), &req)
+	resp, err := otc.createTokenApplication.CreateOauthToken(newCtx, &req)
 	if err != nil {
-		httpErr.HandleError(c, err)
+		httperr.HandleError(c, err)
 	} else {
 		c.JSON(http.StatusCreated, &resp)
 	}

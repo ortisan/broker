@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 	errapp "ortisan-broker/go-commons/error"
-	httpErr "ortisan-broker/go-commons/infrastructure/http/error"
+	httperr "ortisan-broker/go-commons/infrastructure/http/error"
 	"ortisan-broker/go-user-service/adapter/dto"
 	"ortisan-broker/go-user-service/application"
 
@@ -30,12 +30,12 @@ func NewCreateUserRouter(router *gin.Engine, createUserApplication application.C
 func (cur *createUserRouter) CreateUser(c *gin.Context) {
 	var req dto.User
 	if err := c.ShouldBindJSON(&req); err != nil {
-		httpErr.HandleError(c, errapp.NewUnprocessableEntityErrorWithCause("Error to parse body.", err))
+		httperr.HandleError(c, errapp.NewUnprocessableEntityErrorWithCause("Error to parse body.", err))
 		return
 	}
 	resp, err := cur.createUserApplication.CreateUser(c.Request.Context(), req)
 	if err != nil {
-		httpErr.HandleError(c, err)
+		httperr.HandleError(c, err)
 	} else {
 		c.JSON(http.StatusCreated, &resp)
 	}
@@ -63,12 +63,12 @@ func NewGetUserByIdRouter(router *gin.Engine, getUserApplication application.Get
 func (gur *getUserByIdRouter) GetUserById(c *gin.Context) {
 	var params getByIdParams
 	if err := c.ShouldBindUri(&params); err != nil {
-		httpErr.HandleError(c, errapp.NewUnprocessableEntityErrorWithCause("Error to parse params.", err))
+		httperr.HandleError(c, errapp.NewUnprocessableEntityErrorWithCause("Error to parse params.", err))
 		return
 	}
 	resp, err := gur.getUserApplication.GetUser(c.Request.Context(), params.ID)
 	if err != nil {
-		httpErr.HandleError(c, err)
+		httperr.HandleError(c, err)
 	} else {
 		c.JSON(http.StatusCreated, &resp)
 	}
