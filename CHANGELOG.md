@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/ortisan/broker/compare/v1.0.0...v1.1.0) (2023-06-18)
+
+
+### Features
+
+* add opentelemetry ([d3edc56](https://github.com/ortisan/broker/commit/d3edc56dc318648007228676e5ef96c5c5b15d4a))
+
 ## 1.0.0 (2023-06-18)
 
 
