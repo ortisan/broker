@@ -2,7 +2,7 @@ package vo
 
 import (
 	"math/rand"
-	errApp "ortisan-broker/go-commons/error"
+	errapp "ortisan-broker/go-commons/error"
 	"strings"
 	"time"
 
@@ -34,7 +34,7 @@ func NewSecret() Secret {
 
 func NewSecretFromValue(value string) (Name, error) {
 	if value == "" {
-		return nil, errApp.NewBadArgumentError("secret is invalid")
+		return nil, errapp.NewBadArgumentError("secret is invalid")
 	}
 	bytes, _ := bcrypt.GenerateFromPassword([]byte(value), 14)
 	return &secret{

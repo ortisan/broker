@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"ortisan-broker/go-commons/domain/vo"
-	errApp "ortisan-broker/go-commons/error"
+	errapp "ortisan-broker/go-commons/error"
 	"ortisan-broker/go-user-service/adapter/dto"
 	"ortisan-broker/go-user-service/domain/usecase"
 )
@@ -69,7 +69,7 @@ func (g *getUserApplication) GetUser(ctx context.Context, userId string) (*dto.U
 
 func NewGetUserApplication(getUserUseCase usecase.GetUser) (GetUserApplication, error) {
 	if getUserUseCase == nil {
-		return nil, errApp.NewBadArgumentError("get user use case is required")
+		return nil, errapp.NewBadArgumentError("get user use case is required")
 	}
 	return &getUserApplication{
 		getUserUseCase: getUserUseCase,

@@ -2,7 +2,7 @@ package vo
 
 import (
 	"net/mail"
-	errApp "ortisan-broker/go-commons/error"
+	errapp "ortisan-broker/go-commons/error"
 )
 
 type email struct {
@@ -24,7 +24,7 @@ func validate(email string) bool {
 
 func NewEmail(value string) (Email, error) {
 	if !validate(value) {
-		return nil, errApp.NewBadArgumentError("id value is invalid")
+		return nil, errapp.NewBadArgumentError("id value is invalid")
 	}
 	return &email{
 		value: value,

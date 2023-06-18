@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"ortisan-broker/go-commons/domain/vo"
-	errApp "ortisan-broker/go-commons/error"
+	errapp "ortisan-broker/go-commons/error"
 	"ortisan-broker/go-commons/infrastructure/log"
 	"ortisan-broker/go-sts-service/domain/entity"
 	"ortisan-broker/go-sts-service/domain/repository"
@@ -20,10 +20,10 @@ type clientCredentialsPostgresRepository struct {
 
 func (ccr clientCredentialsPostgresRepository) CreateClientCredentials(ctx context.Context, clientCredentials entity.ClientCredentials) (entity.ClientCredentials, error) {
 	if ctx == nil {
-		return nil, errApp.NewBadArgumentError("context is required")
+		return nil, errapp.NewBadArgumentError("context is required")
 	}
 	if clientCredentials == nil {
-		return nil, errApp.NewBadArgumentError("client id is required")
+		return nil, errapp.NewBadArgumentError("client id is required")
 	}
 
 	clientCredentialsModel, err := ccr.adapter.AdaptFromDomainToModel(ctx, clientCredentials)
@@ -40,16 +40,16 @@ func (ccr clientCredentialsPostgresRepository) CreateClientCredentials(ctx conte
 
 func (ccr clientCredentialsPostgresRepository) FindByClientId(ctx context.Context, clientId vo.Id) (entity.ClientCredentials, error) {
 	if ctx == nil {
-		return nil, errApp.NewBadArgumentError("context is required")
+		return nil, errapp.NewBadArgumentError("context is required")
 	}
 	if clientId == nil {
-		return nil, errApp.NewBadArgumentError("client id is required")
+		return nil, errapp.NewBadArgumentError("client id is required")
 	}
 
 	var clientCredentials ClientCredentials
 	err := ccr.db.Where("client_id = ?", clientId).First(&clientCredentials).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, errApp.NewNotFoundError("client credentials not found")
+		return nil, errapp.NewNotFoundError("client credentials not found")
 	}
 
 	return ccr.adapter.AdaptFromModelToDomain(ctx, &clientCredentials)

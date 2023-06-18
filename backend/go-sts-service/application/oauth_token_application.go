@@ -3,7 +3,7 @@ package application
 import (
 	"context"
 	"errors"
-	errApp "ortisan-broker/go-commons/error"
+	errapp "ortisan-broker/go-commons/error"
 	"ortisan-broker/go-sts-service/adapter/dto"
 	"ortisan-broker/go-sts-service/domain/usecase"
 )
@@ -19,10 +19,10 @@ type createOauthTokenApplication struct {
 
 func (c *createOauthTokenApplication) CreateOauthToken(ctx context.Context, token *dto.OauthTokenRequest) (*dto.OauthTokenResponse, error) {
 	if ctx == nil {
-		return nil, errApp.NewBadArgumentError("context is required")
+		return nil, errapp.NewBadArgumentError("context is required")
 	}
 	if token == nil {
-		return nil, errApp.NewBadArgumentError("token request is required")
+		return nil, errapp.NewBadArgumentError("token request is required")
 	}
 
 	oauthToken, err := c.adapter.AdaptFromDtoToDomain(ctx, token)

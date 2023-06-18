@@ -1,3 +1,5 @@
+.idea/
+.vscode/
 go.sum
 go.work.sum
 __debug_bin
@@ -5,3 +7,4 @@ __debug_bin
 #go-commons
 #go-user-service
 #go-sts-service
+/frontend/node_modules/

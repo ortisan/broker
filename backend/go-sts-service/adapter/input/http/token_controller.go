@@ -1,9 +1,9 @@
-package controller
+package http
 
 import (
 	"errors"
 	"net/http"
-	errApp "ortisan-broker/go-commons/error"
+	errapp "ortisan-broker/go-commons/error"
 	httpErr "ortisan-broker/go-commons/infrastructure/http/error"
 	"ortisan-broker/go-sts-service/adapter/dto"
 	"ortisan-broker/go-sts-service/application"
@@ -22,7 +22,7 @@ type oauthTokenController struct {
 func (t *oauthTokenController) CreateOauthToken(c *gin.Context) {
 	var req dto.OauthTokenRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		httpErr.HandleError(c, errApp.NewUnprocessableEntityErrorWithCause("Error to parse body.", err))
+		httpErr.HandleError(c, errapp.NewUnprocessableEntityErrorWithCause("Error to parse body.", err))
 		return
 	}
 	resp, err := t.createTokenApplication.CreateOauthToken(c.Request.Context(), &req)

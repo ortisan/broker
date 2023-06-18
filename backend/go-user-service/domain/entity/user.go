@@ -2,7 +2,7 @@ package entity
 
 import (
 	"ortisan-broker/go-commons/domain/vo"
-	errApp "ortisan-broker/go-commons/error"
+	errapp "ortisan-broker/go-commons/error"
 )
 
 type User interface {
@@ -55,22 +55,22 @@ func NewUser(id vo.Id,
 	federationId vo.Id,
 	profileAvatarUrl vo.Url) (User, error) {
 	if id == nil {
-		return nil, errApp.NewBadArgumentError("id is required")
+		return nil, errapp.NewBadArgumentError("id is required")
 	}
 	if name == nil {
-		return nil, errApp.NewBadArgumentError("name is required")
+		return nil, errapp.NewBadArgumentError("name is required")
 	}
 	if email == nil {
-		return nil, errApp.NewBadArgumentError("email is required")
+		return nil, errapp.NewBadArgumentError("email is required")
 	}
 	if username == nil {
-		return nil, errApp.NewBadArgumentError("username is required")
+		return nil, errapp.NewBadArgumentError("username is required")
 	}
 	if secret == nil {
-		return nil, errApp.NewBadArgumentError("secret is required")
+		return nil, errapp.NewBadArgumentError("secret is required")
 	}
 	if federationId == nil {
-		return nil, errApp.NewBadArgumentError("federation id is required")
+		return nil, errapp.NewBadArgumentError("federation id is required")
 	}
 	return &user{
 		id:               id,

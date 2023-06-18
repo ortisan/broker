@@ -1,7 +1,7 @@
 package vo
 
 import (
-	errApp "ortisan-broker/go-commons/error"
+	errapp "ortisan-broker/go-commons/error"
 
 	uuid "github.com/satori/go.uuid"
 )
@@ -20,7 +20,7 @@ func (i *id) Value() string {
 
 func NewIdFromValue(value string) (Id, error) {
 	if value == "" {
-		return nil, errApp.NewBadArgumentError("id value is invalid")
+		return nil, errapp.NewBadArgumentError("id value is invalid")
 	}
 	return &id{
 		value: value,

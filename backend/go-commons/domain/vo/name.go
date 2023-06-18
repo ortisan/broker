@@ -1,6 +1,6 @@
 package vo
 
-import errApp "ortisan-broker/go-commons/error"
+import errapp "ortisan-broker/go-commons/error"
 
 type name struct {
 	value string
@@ -16,7 +16,7 @@ func (n *name) Value() string {
 
 func NewName(value string) (Name, error) {
 	if value == "" {
-		return nil, errApp.NewBadArgumentError("name value is invalid")
+		return nil, errapp.NewBadArgumentError("name value is invalid")
 	}
 	return &name{
 		value: value,

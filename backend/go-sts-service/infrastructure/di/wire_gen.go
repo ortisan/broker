@@ -12,7 +12,7 @@ import (
 	"ortisan-broker/go-commons/config"
 	"ortisan-broker/go-commons/infrastructure/database"
 	"ortisan-broker/go-commons/infrastructure/log"
-	"ortisan-broker/go-sts-service/adapter/input/controller"
+	"ortisan-broker/go-sts-service/adapter/input/http"
 	database2 "ortisan-broker/go-sts-service/adapter/output/database"
 	"ortisan-broker/go-sts-service/application"
 	"ortisan-broker/go-sts-service/domain/usecase"
@@ -53,7 +53,7 @@ func ConfigRouters() (*gin.Engine, error) {
 	if err != nil {
 		return nil, err
 	}
-	createClientCredentialsController, err := controller.NewCreateClientCredentialsController(createClientCredentialsApplication)
+	createClientCredentialsController, err := http.NewCreateClientCredentialsController(createClientCredentialsApplication)
 	if err != nil {
 		return nil, err
 	}
@@ -73,11 +73,11 @@ func ConfigRouters() (*gin.Engine, error) {
 	if err != nil {
 		return nil, err
 	}
-	oauthTokenController, err := controller.NewOauthTokenController(createOauthTokenApplication)
+	oauthTokenController, err := http.NewOauthTokenController(createOauthTokenApplication)
 	if err != nil {
 		return nil, err
 	}
-	engine, err := controller.NewRouter(createClientCredentialsController, oauthTokenController)
+	engine, err := http.NewRouter(createClientCredentialsController, oauthTokenController)
 	if err != nil {
 		return nil, err
 	}
@@ -98,8 +98,8 @@ var UseCasesSet = wire.NewSet(usecase.NewCreateClientCredentialsUseCase, usecase
 
 var ApplicationsSet = wire.NewSet(application.NewClientCredentialsAdapter, application.NewCreateClientCredentialsApplication, application.NewOauthTokenAdapter, application.NewCreateOauthTokenApplication)
 
-var ControllersSet = wire.NewSet(controller.NewCreateClientCredentialsController, controller.NewOauthTokenController)
+var ControllersSet = wire.NewSet(http.NewCreateClientCredentialsController, http.NewOauthTokenController)
 
-var RoutersSet = wire.NewSet(controller.NewRouter)
+var RoutersSet = wire.NewSet(http.NewRouter)
 
 var AppSet = wire.NewSet(ConfigSet, LoggerSet, DbSet, RepositoriesSet, UseCasesSet, ApplicationsSet, ControllersSet, RoutersSet)

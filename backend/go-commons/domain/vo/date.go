@@ -1,7 +1,7 @@
 package vo
 
 import (
-	errApp "ortisan-broker/go-commons/error"
+	errapp "ortisan-broker/go-commons/error"
 	"time"
 )
 
@@ -30,11 +30,11 @@ func NewDate() Date {
 
 func NewDateFromValueAsString(valueStr string) (DateTime, error) {
 	if valueStr == "" {
-		return nil, errApp.NewBadArgumentError("date is invalid")
+		return nil, errapp.NewBadArgumentError("date is invalid")
 	}
 	d, err := time.Parse(time.DateOnly, valueStr)
 	if err != nil {
-		errApp.NewBadArgumentErrorWithCause("date has invalid format", err)
+		errapp.NewBadArgumentErrorWithCause("date has invalid format", err)
 	}
 	return &date{value: d}, nil
 }

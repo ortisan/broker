@@ -8,7 +8,7 @@ import (
 	"ortisan-broker/go-commons/infrastructure/log"
 	"strings"
 
-	errApp "ortisan-broker/go-commons/error"
+	errapp "ortisan-broker/go-commons/error"
 	"ortisan-broker/go-user-service/domain/entity"
 	"ortisan-broker/go-user-service/domain/repository"
 
@@ -31,7 +31,7 @@ func (cug *createUserPostgresRepository) Create(ctx context.Context, user entity
 	result := cug.db.Create(&userModel)
 	if result.Error != nil {
 		if strings.Contains(result.Error.Error(), errUniqueConstraint) {
-			return nil, errApp.NewConflictErrorWithCause("there is another with same data.", result.Error)
+			return nil, errapp.NewConflictErrorWithCause("there is another with same data.", result.Error)
 		}
 		return nil, result.Error
 	}
@@ -58,11 +58,11 @@ func (gup *getUserPostgresRepository) GetById(ctx context.Context, id vo.Id) (en
 	var user User
 	gup.db.Where("id = ?", id.Value()).Find(&user)
 	if user.ID == "" {
-		return nil, errApp.NewNotFoundError(fmt.Sprintf("User not found for id %s", id.Value()))
+		return nil, errapp.NewNotFoundError(fmt.Sprintf("User not found for id %s", id.Value()))
 	}
 	userEntity, err := AdaptUserModelToUserDomain(&user)
 	if err != nil {
-		return nil, errApp.NewBaseErrorWithCause("error to parse assemble user model", err)
+		return nil, errapp.NewBaseErrorWithCause("error to parse assemble user model", err)
 	}
 	return userEntity, nil
 }

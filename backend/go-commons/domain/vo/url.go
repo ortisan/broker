@@ -2,7 +2,7 @@ package vo
 
 import (
 	nurl "net/url"
-	errApp "ortisan-broker/go-commons/error"
+	errapp "ortisan-broker/go-commons/error"
 )
 
 type url struct {
@@ -19,11 +19,11 @@ func (u *url) Value() string {
 
 func NewUrlFromValue(value string) (Url, error) {
 	if value == "" {
-		return nil, errApp.NewBadArgumentError("url value is invalid")
+		return nil, errapp.NewBadArgumentError("url value is invalid")
 	}
 	urlN, err := nurl.ParseRequestURI(value)
 	if err != nil {
-		return nil, errApp.NewBadArgumentErrorWithCause("url value is invalid", err)
+		return nil, errapp.NewBadArgumentErrorWithCause("url value is invalid", err)
 	}
 	return &url{
 		value: urlN,

@@ -3,7 +3,7 @@ package application
 import (
 	"context"
 	"ortisan-broker/go-commons/domain/vo"
-	errApp "ortisan-broker/go-commons/error"
+	errapp "ortisan-broker/go-commons/error"
 	"ortisan-broker/go-sts-service/adapter/dto"
 	"ortisan-broker/go-sts-service/domain/entity"
 )
@@ -18,10 +18,10 @@ type clientCredentialsAdapter struct {
 
 func (cca clientCredentialsAdapter) AdaptFromDtoToDomain(ctx context.Context, clientCredentials *dto.ClientCredentialsRequest) (entity.ClientCredentials, error) {
 	if ctx == nil {
-		return nil, errApp.NewBadArgumentError("context is required")
+		return nil, errapp.NewBadArgumentError("context is required")
 	}
 	if clientCredentials == nil {
-		return nil, errApp.NewBadArgumentError("client credentials is required")
+		return nil, errapp.NewBadArgumentError("client credentials is required")
 	}
 
 	clientName, err := vo.NewName(clientCredentials.ClientName)
@@ -59,10 +59,10 @@ type oauthTokenAdapter struct {
 
 func (o *oauthTokenAdapter) AdaptFromDtoToDomain(ctx context.Context, oauthTokenRequest *dto.OauthTokenRequest) (entity.OauthToken, error) {
 	if ctx == nil {
-		return nil, errApp.NewBadArgumentError("context is required")
+		return nil, errapp.NewBadArgumentError("context is required")
 	}
 	if oauthTokenRequest == nil {
-		return nil, errApp.NewBadArgumentError("oauth token request is required")
+		return nil, errapp.NewBadArgumentError("oauth token request is required")
 	}
 
 	clientId := vo.NewId()
@@ -77,10 +77,10 @@ func (o *oauthTokenAdapter) AdaptFromDtoToDomain(ctx context.Context, oauthToken
 
 func (o *oauthTokenAdapter) AdaptFromDomainToDto(ctx context.Context, oauthToken entity.OauthToken) (*dto.OauthTokenResponse, error) {
 	if ctx == nil {
-		return nil, errApp.NewBadArgumentError("context is required")
+		return nil, errapp.NewBadArgumentError("context is required")
 	}
 	if oauthToken == nil {
-		return nil, errApp.NewBadArgumentError("oauth token is required")
+		return nil, errapp.NewBadArgumentError("oauth token is required")
 	}
 
 	return &dto.OauthTokenResponse{

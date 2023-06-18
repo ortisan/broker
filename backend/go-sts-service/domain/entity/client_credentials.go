@@ -2,7 +2,7 @@ package entity
 
 import (
 	"ortisan-broker/go-commons/domain/vo"
-	errApp "ortisan-broker/go-commons/error"
+	errapp "ortisan-broker/go-commons/error"
 )
 
 type ClientCredentials interface {
@@ -31,13 +31,13 @@ func (c *clientCredentials) ClientSecret() vo.Secret {
 
 func NewClientCredentials(clientName vo.Name, clientId vo.Id, clientSecret vo.Secret) (ClientCredentials, error) {
 	if clientName == nil {
-		return nil, errApp.NewBadArgumentError("client name is required")
+		return nil, errapp.NewBadArgumentError("client name is required")
 	}
 	if clientId == nil {
-		return nil, errApp.NewBadArgumentError("client id is required")
+		return nil, errapp.NewBadArgumentError("client id is required")
 	}
 	if clientSecret == nil {
-		return nil, errApp.NewBadArgumentError("client secret is required")
+		return nil, errapp.NewBadArgumentError("client secret is required")
 	}
 
 	return &clientCredentials{
@@ -50,10 +50,10 @@ func NewClientCredentials(clientName vo.Name, clientId vo.Id, clientSecret vo.Se
 
 func NewClientCredentialsWithoutName(clientId vo.Id, clientSecret vo.Secret) (ClientCredentials, error) {
 	if clientId == nil {
-		return nil, errApp.NewBadArgumentError("client id is required")
+		return nil, errapp.NewBadArgumentError("client id is required")
 	}
 	if clientSecret == nil {
-		return nil, errApp.NewBadArgumentError("client secret is required")
+		return nil, errapp.NewBadArgumentError("client secret is required")
 	}
 
 	return &clientCredentials{

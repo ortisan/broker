@@ -1,10 +1,10 @@
-package controller
+package http
 
 import (
 	"errors"
 	"net/http"
-	errApp "ortisan-broker/go-commons/error"
-	httpErr "ortisan-broker/go-commons/infrastructure/http/error"
+	errapp "ortisan-broker/go-commons/error"
+	httperr "ortisan-broker/go-commons/infrastructure/http/error"
 	"ortisan-broker/go-sts-service/adapter/dto"
 	"ortisan-broker/go-sts-service/application"
 
@@ -31,12 +31,12 @@ func NewCreateClientCredentialsController(clientCredentialsApplication applicati
 func (cccc createClientCredentialsController) CreateClientCredentials(c *gin.Context) {
 	var req dto.ClientCredentialsRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		httpErr.HandleError(c, errApp.NewUnprocessableEntityErrorWithCause("Error to parse body.", err))
+		httperr.HandleError(c, errapp.NewUnprocessableEntityErrorWithCause("Error to parse body.", err))
 		return
 	}
 	resp, err := cccc.CreateClientCredencialsApplication.CreateClientCredentials(c.Request.Context(), &req)
 	if err != nil {
-		httpErr.HandleError(c, err)
+		httperr.HandleError(c, err)
 	} else {
 		c.JSON(http.StatusCreated, &resp)
 	}

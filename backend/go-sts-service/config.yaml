@@ -1,0 +1,12 @@
+database:
+  host: 127.0.0.1
+  port: 5432
+  user: postgres
+  password: 123456
+  databaseName: sts_database
+opentelemetry:
+  agent_host: localhost
+  agent_port: 6831
+server:
+  address: 8080
+  name: sts-service
