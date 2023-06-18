@@ -36,7 +36,7 @@ async function getUserByToken(oauth_token: string): Promise<UserModelSimple> {
   };
 }
 
-export default function Login() {
+export default function ForgotPassword() {
   const { push } = useRouter();
   const [loading, setLoading] = useState(false)
   const { saveAuth, setCurrentUser } = useAuth()
@@ -91,7 +91,7 @@ export default function Login() {
       >
 
         <div className='text-center mb-11'>
-          <h1 className='text-dark fw-bolder mb-3'>Sign In</h1>
+          <h1 className='text-dark fw-bolder mb-3'>Forgot Password</h1>
           <div className='text-gray-500 fw-semibold fs-6'>Your Social Campaigns</div>
         </div>
 
